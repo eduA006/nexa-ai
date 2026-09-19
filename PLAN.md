@@ -15,7 +15,8 @@
 - **Fase 2 verificada end-to-end por el usuario en el navegador real**: registro con correo real → email de confirmación recibido → clic en el enlace → sesión creada → dashboard mostrando el saludo personalizado. Fase 2 cerrada.
 - **Fase 3 completada**: onboarding (selección Estudiante/Profesional, guarda `role` en `profiles`), layout `(app)` con sidebar (desktop) y menú lateral (móvil, `Sheet`), dashboard real con saludo, herramientas recomendadas por perfil (marcadas "Próximamente" — el catálogo es real pero las herramientas aún no están implementadas), y placeholders honestos en `/documents` y `/history`. Páginas `/profile` (editar nombre) y `/settings` (cambiar rol, tema claro/oscuro/sistema con `next-themes`) completamente funcionales. Verificado por el usuario en el navegador: login → redirección automática a onboarding (cuenta sin rol) → selección de perfil → dashboard con sidebar. Lint, typecheck y build sin errores.
 - **Fase 4 completada**: tabla `documents` (RLS por `user_id`) y bucket privado `documents` en Storage (política RLS por carpeta = `user_id`), aplicados manualmente por el usuario vía `sql-para-ejecutar/03` y `/04`, verificados directamente contra la API REST/Storage. Subida con validación real (extensión + tamaño + firma de bytes, no solo MIME declarado por el cliente), límite diario (`MAX_DOCUMENTS_PER_DAY`), listado, descarga con URL firmada, eliminación. Dashboard actualizado para mostrar documentos reales recientes. **Verificado end-to-end por el usuario en el navegador**: subida, aparición en la lista, descarga y eliminación funcionan correctamente.
-- Próxima fase: **Fase 5 — Capa de IA**.
+- **Fase 5 completada**: capa de abstracción de IA (`lib/ai/provider.ts`, `gemini.ts`, `groq.ts`, `service.ts`). Antes de escribir el código se verificó por búsqueda web que `gemini-2.5-flash` se retira el 2026-10-16, por lo que se usó el modelo GA actual `gemini-3.8-flash` (y `llama-3.3-70b-versatile` para Groq), ambos overrideables por env var. `generateText()`/`generateStructured()` verificados end-to-end contra la API real de Gemini con la key del usuario (texto plano y modo JSON estructurado), mediante una ruta de diagnóstico temporal creada, probada y eliminada antes de commitear. Ningún tool de negocio consume la capa todavía — eso empieza en la Fase 6. Ver `docs/AI.md`.
+- Próxima fase: **Fase 6 — Corrector APA**.
 
 ## 1. Arquitectura propuesta
 
@@ -127,7 +128,7 @@ Se documentan en `.env.example` cuando se cree en Fase 1/2.
 - [x] **Fase 2** — Supabase + Auth por email/contraseña (cliente Supabase, proxy.ts, signup/login/logout, confirmación de correo, protección de rutas) — completada y verificada end-to-end por el usuario
 - [x] **Fase 3** — Profiles + onboarding + dashboard (onboarding, layout con sidebar, dashboard real, perfil, configuración) — completada y verificada por el usuario
 - [x] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, bucket privado con RLS por carpeta de usuario, subida con validación de tipo/tamaño/firma de bytes, listado, descarga con URL firmada, eliminación) — completada
-- [ ] **Fase 5** — Capa de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`, prompts base)
+- [x] **Fase 5** — Capa de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`) — completada y verificada contra la API real; prompts base se crean en la Fase 6 junto con su primer consumidor
 - [ ] **Fase 6** — Corrector APA (reglas programadas + IA, diagnóstico UI)
 - [ ] **Fase 7** — Generación DOCX corregido
 - [ ] **Fase 8** — Analizador de escritura / indicadores de IA

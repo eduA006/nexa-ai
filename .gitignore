@@ -40,6 +40,9 @@ yarn-error.log*
 # local tool artifacts
 .claude/
 
+# capturas de pantalla compartidas durante el desarrollo
+/IMGS/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { credentialsSchema } from "@/lib/validations/auth";
 
@@ -45,8 +46,12 @@ export async function signup(
     return { error: parsed.error.issues[0]?.message ?? "Datos inválidos." };
   }
 
+  const origin = (await headers()).get("origin");
   const supabase = await createClient();
-  const { error } = await supabase.auth.signUp(parsed.data);
+  const { error } = await supabase.auth.signUp({
+    ...parsed.data,
+    options: { emailRedirectTo: `${origin}/auth/callback` },
+  });
 
   if (error) {
     const alreadyRegistered = /already registered|already exists/i.test(

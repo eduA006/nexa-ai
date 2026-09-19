@@ -21,17 +21,19 @@ Supabase Auth de la misma forma.
 - `lib/supabase/middleware.ts` + `proxy.ts` (raíz) — refresca la sesión en cada request y protege rutas. En Next.js 16, el archivo `middleware.ts` se renombró a `proxy.ts`; el comportamiento es idéntico.
 - `lib/validations/auth.ts` — esquema Zod compartido para validar email/contraseña.
 - `lib/supabase/actions.ts` — Server Actions `login`, `signup`, `signOut`.
-- `app/auth/confirm/route.ts` — verifica el enlace de confirmación de correo (`supabase.auth.verifyOtp`).
+- `app/auth/callback/route.ts` — destino del enlace de confirmación (`?code=...`), intercambia el código por una sesión (`exchangeCodeForSession`).
 - `app/auth/error/page.tsx` — página de error cuando un enlace de confirmación falla o expiró.
 - `app/login`, `app/signup`, `app/signup/revisa-tu-correo` — páginas de auth.
 
 ## Flujo
 
-1. Usuario se registra en `/signup` → `signup()` llama a `supabase.auth.signUp()`.
-2. Supabase envía un correo de confirmación. Usuario ve `/signup/revisa-tu-correo`.
-3. Usuario abre el enlace del correo → `app/auth/confirm/route.ts` verifica el `token_hash` y crea la sesión → redirige a `/dashboard`.
+1. Usuario se registra en `/signup` → `signup()` llama a `supabase.auth.signUp()` con `emailRedirectTo: "<origin>/auth/callback"`.
+2. Supabase envía el correo de confirmación **por defecto** (sin necesidad de SMTP propio ni de editar la plantilla). Usuario ve `/signup/revisa-tu-correo`.
+3. Usuario abre `{{ .ConfirmationURL }}` del correo → Supabase verifica el token en su propio servidor y redirige a `emailRedirectTo` con `?code=...` → `app/auth/callback/route.ts` intercambia el código por una sesión (`exchangeCodeForSession`) → redirige a `/dashboard`.
 4. En logins posteriores, `/login` → `login()` llama a `supabase.auth.signInWithPassword()`.
 5. `signOut()` cierra la sesión y redirige a `/`.
+
+**Por qué no se editó la plantilla de email**: Supabase Free requiere configurar un proveedor SMTP propio para poder editar el asunto/cuerpo de los correos (banner "Set up custom SMTP to edit templates" en el dashboard). Configurar SMTP es un paso adicional evitable: usando el `{{ .ConfirmationURL }}` por defecto junto con `emailRedirectTo` se logra el mismo resultado sin esa dependencia. Si en el futuro se configura SMTP propio (para personalizar branding del correo, por ejemplo), se puede volver al patrón `token_hash` + `verifyOtp` documentado por Supabase, pero no es necesario para que la autenticación funcione.
 
 ## Rutas protegidas
 
@@ -42,17 +44,12 @@ Un usuario sin sesión que intente acceder a estas rutas es redirigido a `/login
 
 ## Configuración requerida en el dashboard de Supabase
 
-A diferencia de OAuth, email + contraseña **no requiere ninguna consola externa**. Solo hay que verificar/ajustar una cosa en el dashboard de Supabase (proyecto `khpqeqiimsqqwhyphuon`):
+A diferencia de OAuth, email + contraseña **no requiere ninguna consola externa ni SMTP propio**. Solo hay que ajustar la lista de redirects permitidos en el dashboard de Supabase (proyecto `khpqeqiimsqqwhyphuon`):
 
-1. **Authentication → Email Templates → Confirm signup**: cambiar el enlace del template para que apunte a la ruta de confirmación de la app en vez del endpoint genérico de Supabase:
+1. **Authentication → URL Configuration → Site URL**: en desarrollo, `http://localhost:3000`. Se actualiza al dominio real en la Fase 15 (deploy).
+2. **Authentication → URL Configuration → Redirect URLs**: agregar `http://localhost:3000/auth/callback` (y, cuando exista, la URL de producción equivalente).
 
-   ```
-   {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email
-   ```
-
-2. **Authentication → URL Configuration → Site URL**: en desarrollo, `http://localhost:3000`. Se actualiza al dominio real en la Fase 15 (deploy).
-
-Sin el paso 1, el enlace de confirmación no pasará por `app/auth/confirm/route.ts` y el usuario no podrá iniciar sesión tras registrarse.
+Sin el paso 2, Supabase rechaza el `emailRedirectTo` enviado por `signUp()` y el enlace de confirmación no podrá redirigir de vuelta a la app.
 
 ## Tabla `profiles`
 

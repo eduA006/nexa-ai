@@ -11,8 +11,9 @@
 - Proyecto Supabase: el usuario creó manualmente su propio proyecto en otra cuenta (id `khpqeqiimsqqwhyphuon`). El proyecto `nexa-ai` creado inicialmente por el asistente (`tgdkomcqnoarcdhayztr`) queda sin usar; el usuario decide qué hacer con él.
 - Migraciones (`profiles` + RLS + triggers) aplicadas manualmente por el usuario vía SQL Editor, usando los archivos en `sql-para-ejecutar/`. Verificado con una consulta REST directa (200 OK, tabla existe y RLS activo).
 - Fase 2 completada en código con **email + contraseña** en vez de Google OAuth (ver decisión arriba): clientes Supabase (browser/server), `proxy.ts` con protección de rutas, signup/login/logout, confirmación de correo (`app/auth/confirm`), tabla `profiles` con RLS y trigger de auto-creación. Verificado: build OK, protección de rutas redirige correctamente a `/login`.
-- Pendiente (acción del usuario en el dashboard de Supabase, no requiere consola externa): actualizar la plantilla de email "Confirm signup" para que apunte a `/auth/confirm`. Ver `docs/AUTH.md`.
-- Próxima fase tras esa configuración: **Fase 3 — Profiles + onboarding + dashboard**.
+- Ajuste posterior: editar la plantilla de email requiere SMTP propio en Supabase Free (no disponible), así que se usa el `{{ .ConfirmationURL }}` por defecto junto con `emailRedirectTo` apuntando a `app/auth/callback/route.ts` (`exchangeCodeForSession`). Requirió agregar `http://localhost:3000/auth/callback` a Authentication → URL Configuration → Redirect URLs.
+- **Fase 2 verificada end-to-end por el usuario en el navegador real**: registro con correo real → email de confirmación recibido → clic en el enlace → sesión creada → dashboard mostrando el saludo personalizado. Fase 2 cerrada.
+- Próxima fase: **Fase 3 — Profiles + onboarding + dashboard**.
 
 ## 1. Arquitectura propuesta
 
@@ -121,7 +122,7 @@ Se documentan en `.env.example` cuando se cree en Fase 1/2.
 ## 2. Fases de desarrollo
 
 - [x] **Fase 1** — Base del proyecto + UI + arquitectura (Next.js, TS, Tailwind, shadcn, estructura de carpetas, landing estática, .env.example, docs base) — completada
-- [x] **Fase 2** — Supabase + Google Auth (cliente Supabase, proxy.ts, login/logout, protección de rutas) — completada en código; pendiente que el usuario configure el OAuth client en Google Cloud Console y lo active en Supabase (ver docs/AUTH.md)
+- [x] **Fase 2** — Supabase + Auth por email/contraseña (cliente Supabase, proxy.ts, signup/login/logout, confirmación de correo, protección de rutas) — completada y verificada end-to-end por el usuario
 - [ ] **Fase 3** — Profiles + onboarding + dashboard (esquema `profiles`, selección estudiante/profesional, dashboard base)
 - [ ] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, subida, validación MIME/tamaño, listado)
 - [ ] **Fase 5** — Capa de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`, prompts base)

@@ -6,7 +6,9 @@
 ## 0. Estado del proyecto
 
 - Auditoría inicial: directorio vacío, sin código previo que reutilizar.
-- Repositorio git: se inicializa localmente en esta fase (sin remoto de GitHub aún — se añadirá cuando el usuario provea uno o pida crearlo).
+- Repositorio git: inicializado localmente (commit inicial `cf183a2`). Sin remoto de GitHub aún — se añadirá cuando el usuario provea uno o pida crearlo.
+- Fase 1 completada: lint, typecheck y build pasan sin errores.
+- Próxima fase: **Fase 2 — Supabase + Google Auth**.
 
 ## 1. Arquitectura propuesta
 
@@ -114,7 +116,7 @@ Se documentan en `.env.example` cuando se cree en Fase 1/2.
 
 ## 2. Fases de desarrollo
 
-- [ ] **Fase 1** — Base del proyecto + UI + arquitectura (Next.js, TS, Tailwind, shadcn, estructura de carpetas, landing estática, .env.example, docs base)
+- [x] **Fase 1** — Base del proyecto + UI + arquitectura (Next.js, TS, Tailwind, shadcn, estructura de carpetas, landing estática, .env.example, docs base) — completada
 - [ ] **Fase 2** — Supabase + Google Auth (cliente Supabase, middleware, login/logout, protección de rutas)
 - [ ] **Fase 3** — Profiles + onboarding + dashboard (esquema `profiles`, selección estudiante/profesional, dashboard base)
 - [ ] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, subida, validación MIME/tamaño, listado)

@@ -8,7 +8,10 @@
 - Auditoría inicial: directorio vacío, sin código previo que reutilizar.
 - Repositorio git: inicializado localmente (commit inicial `cf183a2`). Sin remoto de GitHub aún — se añadirá cuando el usuario provea uno o pida crearlo.
 - Fase 1 completada: lint, typecheck y build pasan sin errores.
-- Próxima fase: **Fase 2 — Supabase + Google Auth**.
+- Proyecto Supabase creado: `nexa-ai` (id `tgdkomcqnoarcdhayztr`, región `us-east-1`, plan Free, org `zwtxxuiwpduntdnmamms`).
+- Fase 2 completada en código: clientes Supabase (browser/server), `proxy.ts` con protección de rutas, login/logout con Google, tabla `profiles` con RLS y trigger de auto-creación. Verificado: build OK, protección de rutas redirige correctamente a `/login`.
+- Pendiente (acción del usuario, fuera del alcance del código): crear OAuth Client ID en Google Cloud Console y activarlo en Supabase Auth → Providers → Google. Instrucciones exactas en `docs/AUTH.md`.
+- Próxima fase tras esa configuración: **Fase 3 — Profiles + onboarding + dashboard**.
 
 ## 1. Arquitectura propuesta
 
@@ -117,7 +120,7 @@ Se documentan en `.env.example` cuando se cree en Fase 1/2.
 ## 2. Fases de desarrollo
 
 - [x] **Fase 1** — Base del proyecto + UI + arquitectura (Next.js, TS, Tailwind, shadcn, estructura de carpetas, landing estática, .env.example, docs base) — completada
-- [ ] **Fase 2** — Supabase + Google Auth (cliente Supabase, middleware, login/logout, protección de rutas)
+- [x] **Fase 2** — Supabase + Google Auth (cliente Supabase, proxy.ts, login/logout, protección de rutas) — completada en código; pendiente que el usuario configure el OAuth client en Google Cloud Console y lo active en Supabase (ver docs/AUTH.md)
 - [ ] **Fase 3** — Profiles + onboarding + dashboard (esquema `profiles`, selección estudiante/profesional, dashboard base)
 - [ ] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, subida, validación MIME/tamaño, listado)
 - [ ] **Fase 5** — Capa de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`, prompts base)

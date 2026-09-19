@@ -13,7 +13,8 @@
 - Fase 2 completada en código con **email + contraseña** en vez de Google OAuth (ver decisión arriba): clientes Supabase (browser/server), `proxy.ts` con protección de rutas, signup/login/logout, confirmación de correo (`app/auth/confirm`), tabla `profiles` con RLS y trigger de auto-creación. Verificado: build OK, protección de rutas redirige correctamente a `/login`.
 - Ajuste posterior: editar la plantilla de email requiere SMTP propio en Supabase Free (no disponible), así que se usa el `{{ .ConfirmationURL }}` por defecto junto con `emailRedirectTo` apuntando a `app/auth/callback/route.ts` (`exchangeCodeForSession`). Requirió agregar `http://localhost:3000/auth/callback` a Authentication → URL Configuration → Redirect URLs.
 - **Fase 2 verificada end-to-end por el usuario en el navegador real**: registro con correo real → email de confirmación recibido → clic en el enlace → sesión creada → dashboard mostrando el saludo personalizado. Fase 2 cerrada.
-- Próxima fase: **Fase 3 — Profiles + onboarding + dashboard**.
+- **Fase 3 completada**: onboarding (selección Estudiante/Profesional, guarda `role` en `profiles`), layout `(app)` con sidebar (desktop) y menú lateral (móvil, `Sheet`), dashboard real con saludo, herramientas recomendadas por perfil (marcadas "Próximamente" — el catálogo es real pero las herramientas aún no están implementadas), y placeholders honestos en `/documents` y `/history`. Páginas `/profile` (editar nombre) y `/settings` (cambiar rol, tema claro/oscuro/sistema con `next-themes`) completamente funcionales. Verificado por el usuario en el navegador: login → redirección automática a onboarding (cuenta sin rol) → selección de perfil → dashboard con sidebar. Lint, typecheck y build sin errores.
+- Próxima fase: **Fase 4 — Sistema de documentos + Storage**.
 
 ## 1. Arquitectura propuesta
 
@@ -123,7 +124,7 @@ Se documentan en `.env.example` cuando se cree en Fase 1/2.
 
 - [x] **Fase 1** — Base del proyecto + UI + arquitectura (Next.js, TS, Tailwind, shadcn, estructura de carpetas, landing estática, .env.example, docs base) — completada
 - [x] **Fase 2** — Supabase + Auth por email/contraseña (cliente Supabase, proxy.ts, signup/login/logout, confirmación de correo, protección de rutas) — completada y verificada end-to-end por el usuario
-- [ ] **Fase 3** — Profiles + onboarding + dashboard (esquema `profiles`, selección estudiante/profesional, dashboard base)
+- [x] **Fase 3** — Profiles + onboarding + dashboard (onboarding, layout con sidebar, dashboard real, perfil, configuración) — completada y verificada por el usuario
 - [ ] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, subida, validación MIME/tamaño, listado)
 - [ ] **Fase 5** — Capa de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`, prompts base)
 - [ ] **Fase 6** — Corrector APA (reglas programadas + IA, diagnóstico UI)

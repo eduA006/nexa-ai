@@ -1,37 +1,100 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
-import { signOut } from "@/lib/supabase/actions";
-import { Button } from "@/components/ui/button";
+import { FileText, Clock, Wrench, Sparkles } from "lucide-react";
+import { getCurrentUser } from "@/lib/dal";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { RECOMMENDED_TOOLS } from "@/components/tools/catalog";
 
-/**
- * Dashboard mínimo para verificar el flujo de autenticación (Fase 2).
- * El dashboard completo (herramientas recomendadas, documentos recientes,
- * actividad) se construye en la Fase 3.
- */
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+  const session = await getCurrentUser();
+  const profile = session?.profile;
+  const displayName = profile?.full_name || session?.user.email;
+  const recommended = RECOMMENDED_TOOLS[profile?.role ?? "student"];
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-24 text-center">
-      <h1 className="text-2xl font-semibold tracking-tight">
-        Hola, {user.user_metadata.full_name ?? user.email} 👋
-      </h1>
-      <p className="text-muted-foreground">
-        Sesión iniciada correctamente. El dashboard completo se construye en
-        la Fase 3.
-      </p>
-      <form action={signOut}>
-        <Button type="submit" variant="outline">
-          Cerrar sesión
-        </Button>
-      </form>
+    <div className="flex flex-1 flex-col gap-8 px-6 py-8 md:px-10">
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Hola, {displayName} 👋
+        </h1>
+        <p className="text-muted-foreground">¿Qué necesitas hacer hoy?</p>
+      </div>
+
+      <section>
+        <h2 className="mb-3 text-sm font-medium text-muted-foreground">
+          Herramientas recomendadas
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {recommended.map((tool) => (
+            <Card key={tool.name} className="opacity-80">
+              <CardHeader>
+                <tool.icon className="h-5 w-5" />
+                <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
+                <CardDescription>{tool.description}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Badge variant="secondary">Próximamente</Badge>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <FileText className="h-5 w-5" />
+            <CardTitle className="mt-2 text-base">
+              Mis documentos recientes
+            </CardTitle>
+            <CardDescription>
+              Aún no hay subida de documentos disponible. Esta función llega
+              en una próxima fase.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <Clock className="h-5 w-5" />
+            <CardTitle className="mt-2 text-base">Actividad reciente</CardTitle>
+            <CardDescription>
+              Aquí verás el historial de tus análisis y documentos generados
+              cuando esta función esté disponible.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <Wrench className="h-5 w-5" />
+          <CardTitle className="mt-2 text-base">
+            Herramientas más utilizadas
+          </CardTitle>
+          <CardDescription>
+            Se mostrarán aquí una vez que empieces a usar herramientas de IA.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      <Card className="border-dashed">
+        <CardHeader className="items-center text-center">
+          <Sparkles className="h-5 w-5" />
+          <CardTitle className="mt-2 text-base">
+            El dashboard sigue en construcción
+          </CardTitle>
+          <CardDescription>
+            Estas secciones se irán activando a medida que se completen las
+            fases del proyecto (ver PLAN.md).
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 }

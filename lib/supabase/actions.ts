@@ -1,30 +1,70 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { credentialsSchema } from "@/lib/validations/auth";
 
-export async function signInWithGoogle(redirectTo?: string) {
-  const supabase = await createClient();
-  const origin = (await headers()).get("origin");
+export type AuthActionState = { error: string } | undefined;
 
-  const callbackUrl = new URL("/auth/callback", origin ?? undefined);
-  if (redirectTo) callbackUrl.searchParams.set("redirectTo", redirectTo);
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: { redirectTo: callbackUrl.toString() },
+export async function login(
+  redirectTo: string | undefined,
+  _prevState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = credentialsSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
   });
 
-  if (error || !data.url) {
-    redirect("/login?error=oauth_init_failed");
+  if (!parsed.success) {
+    return { error: "Correo o contraseña inválidos." };
   }
 
-  redirect(data.url);
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+
+  if (error) {
+    return { error: "Credenciales incorrectas. Inténtalo nuevamente." };
+  }
+
+  revalidatePath("/", "layout");
+  redirect(redirectTo || "/dashboard");
+}
+
+export async function signup(
+  _prevState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = credentialsSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Datos inválidos." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signUp(parsed.data);
+
+  if (error) {
+    const alreadyRegistered = /already registered|already exists/i.test(
+      error.message,
+    );
+    return {
+      error: alreadyRegistered
+        ? "Ya existe una cuenta con este correo."
+        : "No se pudo crear la cuenta. Inténtalo nuevamente.",
+    };
+  }
+
+  redirect("/signup/revisa-tu-correo");
 }
 
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+  revalidatePath("/", "layout");
   redirect("/");
 }

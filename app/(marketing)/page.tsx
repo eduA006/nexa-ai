@@ -242,8 +242,7 @@ export default function LandingPage() {
               Empieza a usar NEXA AI
             </h2>
             <p className="max-w-md text-muted-foreground">
-              Inicia sesión con tu cuenta de Google y elige tu perfil para
-              empezar.
+              Crea una cuenta con tu correo y elige tu perfil para empezar.
             </p>
             <Link href="/login" className={buttonVariants({ size: "lg" })}>
               Comenzar gratis

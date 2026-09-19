@@ -9,33 +9,27 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LoginForm } from "@/components/auth/login-form";
+import { SignupForm } from "@/components/auth/signup-form";
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ redirectTo?: string }>;
-}) {
-  const { redirectTo } = await searchParams;
-
+export default function SignupPage() {
   return (
     <div className="flex flex-1 items-center justify-center px-6 py-24">
       <Card className="w-full max-w-sm">
         <CardHeader className="items-center text-center">
           <Sparkles className="h-6 w-6" />
-          <CardTitle className="mt-2">Inicio de sesión</CardTitle>
+          <CardTitle className="mt-2">Crear cuenta</CardTitle>
           <CardDescription>
-            Ingresa con tu correo y contraseña para continuar.
+            Regístrate con tu correo para empezar a usar NEXA AI.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <LoginForm redirectTo={redirectTo} />
+          <SignupForm />
         </CardContent>
         <CardFooter className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
-            ¿No tienes cuenta?{" "}
-            <Link href="/signup" className="font-medium text-foreground underline underline-offset-4">
-              Regístrate
+            ¿Ya tienes cuenta?{" "}
+            <Link href="/login" className="font-medium text-foreground underline underline-offset-4">
+              Inicia sesión
             </Link>
           </p>
           <Link href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>

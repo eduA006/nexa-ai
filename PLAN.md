@@ -8,9 +8,10 @@
 - Auditoría inicial: directorio vacío, sin código previo que reutilizar.
 - Repositorio git: inicializado localmente (commit inicial `cf183a2`). Sin remoto de GitHub aún — se añadirá cuando el usuario provea uno o pida crearlo.
 - Fase 1 completada: lint, typecheck y build pasan sin errores.
-- Proyecto Supabase creado: `nexa-ai` (id `tgdkomcqnoarcdhayztr`, región `us-east-1`, plan Free, org `zwtxxuiwpduntdnmamms`).
-- Fase 2 completada en código: clientes Supabase (browser/server), `proxy.ts` con protección de rutas, login/logout con Google, tabla `profiles` con RLS y trigger de auto-creación. Verificado: build OK, protección de rutas redirige correctamente a `/login`.
-- Pendiente (acción del usuario, fuera del alcance del código): crear OAuth Client ID en Google Cloud Console y activarlo en Supabase Auth → Providers → Google. Instrucciones exactas en `docs/AUTH.md`.
+- Proyecto Supabase: el usuario creó manualmente su propio proyecto en otra cuenta (id `khpqeqiimsqqwhyphuon`). El proyecto `nexa-ai` creado inicialmente por el asistente (`tgdkomcqnoarcdhayztr`) queda sin usar; el usuario decide qué hacer con él.
+- Migraciones (`profiles` + RLS + triggers) aplicadas manualmente por el usuario vía SQL Editor, usando los archivos en `sql-para-ejecutar/`. Verificado con una consulta REST directa (200 OK, tabla existe y RLS activo).
+- Fase 2 completada en código con **email + contraseña** en vez de Google OAuth (ver decisión arriba): clientes Supabase (browser/server), `proxy.ts` con protección de rutas, signup/login/logout, confirmación de correo (`app/auth/confirm`), tabla `profiles` con RLS y trigger de auto-creación. Verificado: build OK, protección de rutas redirige correctamente a `/login`.
+- Pendiente (acción del usuario en el dashboard de Supabase, no requiere consola externa): actualizar la plantilla de email "Confirm signup" para que apunte a `/auth/confirm`. Ver `docs/AUTH.md`.
 - Próxima fase tras esa configuración: **Fase 3 — Profiles + onboarding + dashboard**.
 
 ## 1. Arquitectura propuesta
@@ -139,6 +140,7 @@ Cada fase se cierra solo tras: lint + typecheck + build sin errores críticos, d
 
 ## 3. Decisiones tomadas sin consultar (documentadas)
 
+- **Login con email + contraseña en vez de Google OAuth.** El plan original pedía Google. Se cambió porque crear el OAuth Client ID en Google Cloud Console exige verificar una tarjeta, y el usuario prefirió evitarlo. Email + contraseña es nativo de Supabase Auth (confirmación por correo incluida), sin consolas externas ni verificación de pago. Decisión tomada junto con el usuario el 2026-09-19. Google (o GitHub, que no requiere tarjeta) puede añadirse después sin rediseñar la capa de auth. Ver `docs/AUTH.md`.
 - Se usa `mammoth` para lectura de DOCX (extracción a texto/HTML) por ser la opción gratuita más madura; `docx` para generación.
 - Se usa `pdfjs-dist` para extracción de texto de PDF y `pdf-lib` para manipulación/generación, ya que cubren necesidades distintas y ambas son gratuitas.
 - Row Level Security se implementará desde la primera migración que cree tablas con `user_id`, no se pospone.

@@ -1,14 +1,37 @@
 # Autenticación — NEXA AI
 
-Estado: Fase 2. Login con Google vía Supabase Auth.
+Estado: Fase 2. Login con **email + contraseña** vía Supabase Auth.
+
+## Decisión: email + contraseña en vez de Google OAuth
+
+El plan original contemplaba login con Google. Se cambió a email + contraseña
+porque crear el OAuth Client ID requiere que el usuario verifique una
+tarjeta en Google Cloud Console, y el usuario prefirió evitarlo. Email +
+contraseña es nativo de Supabase Auth, no requiere ninguna consola externa
+ni verificación de pago, y mantiene el mismo nivel de seguridad (hashing,
+confirmación de correo, RLS). Google (u otro proveedor OAuth como GitHub,
+que no requiere tarjeta) puede añadirse más adelante sin cambiar el resto
+de la arquitectura de auth, ya que toda la lógica de sesión pasa por
+Supabase Auth de la misma forma.
 
 ## Arquitectura
 
 - `lib/supabase/client.ts` — cliente de Supabase para Client Components.
 - `lib/supabase/server.ts` — cliente de Supabase para Server Components, Server Actions y Route Handlers (usa `cookies()` async de Next.js 16).
 - `lib/supabase/middleware.ts` + `proxy.ts` (raíz) — refresca la sesión en cada request y protege rutas. En Next.js 16, el archivo `middleware.ts` se renombró a `proxy.ts`; el comportamiento es idéntico.
-- `lib/supabase/actions.ts` — Server Actions `signInWithGoogle` y `signOut`.
-- `app/auth/callback/route.ts` — intercambia el código de OAuth por una sesión.
+- `lib/validations/auth.ts` — esquema Zod compartido para validar email/contraseña.
+- `lib/supabase/actions.ts` — Server Actions `login`, `signup`, `signOut`.
+- `app/auth/confirm/route.ts` — verifica el enlace de confirmación de correo (`supabase.auth.verifyOtp`).
+- `app/auth/error/page.tsx` — página de error cuando un enlace de confirmación falla o expiró.
+- `app/login`, `app/signup`, `app/signup/revisa-tu-correo` — páginas de auth.
+
+## Flujo
+
+1. Usuario se registra en `/signup` → `signup()` llama a `supabase.auth.signUp()`.
+2. Supabase envía un correo de confirmación. Usuario ve `/signup/revisa-tu-correo`.
+3. Usuario abre el enlace del correo → `app/auth/confirm/route.ts` verifica el `token_hash` y crea la sesión → redirige a `/dashboard`.
+4. En logins posteriores, `/login` → `login()` llama a `supabase.auth.signInWithPassword()`.
+5. `signOut()` cierra la sesión y redirige a `/`.
 
 ## Rutas protegidas
 
@@ -17,32 +40,22 @@ Definidas en `PROTECTED_PREFIXES` dentro de `lib/supabase/middleware.ts`:
 
 Un usuario sin sesión que intente acceder a estas rutas es redirigido a `/login?redirectTo=<ruta original>`.
 
-## Configuración requerida (fuera del código, en dashboards externos)
+## Configuración requerida en el dashboard de Supabase
 
-Esto **no se puede automatizar por seguridad** — requiere acceso directo del usuario a Google Cloud Console y al dashboard de Supabase.
+A diferencia de OAuth, email + contraseña **no requiere ninguna consola externa**. Solo hay que verificar/ajustar una cosa en el dashboard de Supabase (proyecto `khpqeqiimsqqwhyphuon`):
 
-### 1. Google Cloud Console
+1. **Authentication → Email Templates → Confirm signup**: cambiar el enlace del template para que apunte a la ruta de confirmación de la app en vez del endpoint genérico de Supabase:
 
-1. Crear (o reutilizar) un proyecto en [Google Cloud Console](https://console.cloud.google.com/).
-2. Ir a **APIs & Services → Credentials → Create Credentials → OAuth client ID**.
-3. Tipo de aplicación: **Web application**.
-4. **Authorized JavaScript origins**:
-   - `http://localhost:3000` (desarrollo)
-   - el dominio de producción cuando exista (Fase 15)
-5. **Authorized redirect URIs**:
-   - `https://tgdkomcqnoarcdhayztr.supabase.co/auth/v1/callback`
-6. Guardar el **Client ID** y el **Client Secret**.
+   ```
+   {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email
+   ```
 
-### 2. Supabase Dashboard
+2. **Authentication → URL Configuration → Site URL**: en desarrollo, `http://localhost:3000`. Se actualiza al dominio real en la Fase 15 (deploy).
 
-1. Ir al proyecto `nexa-ai` → **Authentication → Providers → Google**.
-2. Activar el provider y pegar el Client ID y Client Secret del paso anterior.
-3. Guardar.
-
-Sin este paso, el botón "Continuar con Google" de `/login` iniciará el flujo pero Supabase rechazará la solicitud.
+Sin el paso 1, el enlace de confirmación no pasará por `app/auth/confirm/route.ts` y el usuario no podrá iniciar sesión tras registrarse.
 
 ## Tabla `profiles`
 
 Cada usuario autenticado obtiene automáticamente una fila en `public.profiles` mediante el trigger `on_auth_user_created` (ver migración `create_profiles`). RLS garantiza que cada usuario solo puede leer/modificar su propia fila (`auth.uid() = user_id`).
 
-El campo `role` (`student` | `professional`) se completa en el onboarding (Fase 3); hasta entonces es `null`.
+Con email + contraseña, `full_name` y `avatar_url` quedan `null` hasta que el usuario los complete (Fase 3 / configuración). El campo `role` (`student` | `professional`) se completa en el onboarding (Fase 3).

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,18 +19,30 @@ export default async function ToolsPage() {
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {tools.map((tool) => (
-          <Card key={tool.slug} className="opacity-80">
-            <CardHeader>
-              <tool.icon className="h-5 w-5" />
-              <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
-              <CardDescription>{tool.description}</CardDescription>
-            </CardHeader>
-            <div className="px-6 pb-6">
-              <Badge variant="secondary">Próximamente</Badge>
-            </div>
-          </Card>
-        ))}
+        {tools.map((tool) =>
+          tool.available ? (
+            <Link key={tool.slug} href={`/tools/${tool.slug}`}>
+              <Card className="h-full transition-colors hover:bg-muted/50">
+                <CardHeader>
+                  <tool.icon className="h-5 w-5" />
+                  <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
+                  <CardDescription>{tool.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+          ) : (
+            <Card key={tool.slug} className="opacity-80">
+              <CardHeader>
+                <tool.icon className="h-5 w-5" />
+                <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
+                <CardDescription>{tool.description}</CardDescription>
+              </CardHeader>
+              <div className="px-6 pb-6">
+                <Badge variant="secondary">Próximamente</Badge>
+              </div>
+            </Card>
+          ),
+        )}
       </div>
     </div>
   );

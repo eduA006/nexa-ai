@@ -40,18 +40,30 @@ export default async function DashboardPage() {
           Herramientas recomendadas
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {recommended.map((tool) => (
-            <Card key={tool.name} className="opacity-80">
-              <CardHeader>
-                <tool.icon className="h-5 w-5" />
-                <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
-                <CardDescription>{tool.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Badge variant="secondary">Próximamente</Badge>
-              </CardContent>
-            </Card>
-          ))}
+          {recommended.map((tool) =>
+            tool.available ? (
+              <Link key={tool.slug} href={`/tools/${tool.slug}`}>
+                <Card className="h-full transition-colors hover:bg-muted/50">
+                  <CardHeader>
+                    <tool.icon className="h-5 w-5" />
+                    <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
+                    <CardDescription>{tool.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            ) : (
+              <Card key={tool.slug} className="opacity-80">
+                <CardHeader>
+                  <tool.icon className="h-5 w-5" />
+                  <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
+                  <CardDescription>{tool.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Badge variant="secondary">Próximamente</Badge>
+                </CardContent>
+              </Card>
+            ),
+          )}
         </div>
       </section>
 

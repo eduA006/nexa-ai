@@ -24,10 +24,12 @@ export type ToolCatalogItem = {
   name: string;
   description: string;
   icon: LucideIcon;
+  /** Si está implementada, enlaza a /tools/{slug} en vez de mostrar "Próximamente". */
+  available?: boolean;
 };
 
 export const STUDENT_TOOLS: ToolCatalogItem[] = [
-  { slug: "apa", name: "Corrector APA 7", description: "Analiza formato y estructura APA con reglas y IA.", icon: FileCheck2 },
+  { slug: "apa", name: "Corrector APA 7", description: "Analiza formato y estructura APA con reglas y IA.", icon: FileCheck2, available: true },
   { slug: "analizador-escritura", name: "Analizador de escritura", description: "Indicadores probabilísticos sobre el estilo del texto.", icon: ScanSearch },
   { slug: "corrector-redaccion", name: "Corrector de redacción", description: "Ortografía, gramática, claridad y cohesión.", icon: SpellCheck2 },
   { slug: "resumir", name: "Resumir documento", description: "Resumen breve, detallado, ideas clave y conclusiones.", icon: FileText },

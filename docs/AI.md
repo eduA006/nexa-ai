@@ -1,6 +1,6 @@
 # Capa de IA — NEXA AI
 
-Estado: Fase 5. Abstracción de proveedores lista; ningún tool de negocio la consume todavía (eso empieza en la Fase 6).
+Estado: Fase 6. Abstracción de proveedores lista y consumida por el primer tool real (Corrector APA 7).
 
 ## Arquitectura
 
@@ -35,7 +35,9 @@ Devuelve `{ text, provider, model, tokensUsed }`. `tokensUsed` viene de `usageMe
 
 Pide salida JSON (`json: true`), la parsea, y la valida con `schema.parse()` (pensado para pasar un schema de Zod). Lanza `AIProviderError` si el modelo no devuelve JSON válido o si no cumple el schema — nunca se confía ciegamente en texto generado por IA. Devuelve `{ data, result }`.
 
-## Pendiente para cuando exista el primer consumidor (Fase 6)
+## Primer consumidor: Corrector APA 7 (Fase 6)
 
-- `lib/ai/prompts/` — prompts versionados por herramienta (ej. `apa.ts`). No se crea vacío de antemano; se crea cuando la Fase 6 lo necesite.
-- Control de límite diario (`MAX_AI_REQUESTS_PER_DAY`, ver `lib/config/limits.ts`) — se conecta cuando la primera herramienta llame a `AIService`. Necesitará una forma de contar solicitudes por usuario/día (candidato natural: tabla `ai_sessions`, prevista en `PLAN.md` sección 5, pero formalmente asignada a la Fase 12; puede adelantarse si la Fase 6 lo requiere — a decidir en su momento).
+- `lib/ai/prompts/apa.ts` — prompt + schema Zod (`apaAiResultSchema`) para la parte de IA del análisis (redacción, coherencia, citas contextuales). La IA explícitamente **no** evalúa formato (eso lo cubren las reglas programadas, `lib/rules/apa.ts`) — ver arquitectura híbrida en `PLAN.md` sección 1.2.
+- `lib/documents/analyze/apa.ts` combina reglas + IA en un solo resultado.
+- Límite diario (`MAX_AI_REQUESTS_PER_DAY`) implementado en `lib/tools/apa/actions.ts`, contando filas de `ai_sessions` creadas por el usuario desde el inicio del día UTC. Cada llamada exitosa a `AIService` se registra en `ai_sessions` (tool, provider, model, tokens_used).
+- Verificado con Gemini real: se observó un 503 transitorio ("modelo con alta demanda") de Google durante pruebas — `AIService` lo manejó correctamente (intentó fallback, informó el error sin exponer detalles internos al usuario). No es un bug del código; es el comportamiento esperado ante una falla real de la API upstream.

@@ -29,7 +29,6 @@ async function detectFileType(file: File): Promise<AllowedFileType | null> {
   const ext = file.name.split(".").pop()?.toLowerCase();
   if (ext === "csv") {
     const sample = await file.slice(0, 512).text();
-    // eslint-disable-next-line no-control-regex
     const looksBinary = /[\x00-\x08\x0e-\x1f]/.test(sample);
     return looksBinary ? null : "csv";
   }

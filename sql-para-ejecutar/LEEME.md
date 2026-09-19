@@ -6,6 +6,7 @@ En tu proyecto Supabase, en el **SQL Editor** → **New query**, ejecuta los arc
 2. `02_restrict_handle_new_user_execute.sql`
 3. `03_create_documents.sql`
 4. `04_create_documents_storage.sql`
+5. `05_create_ai_sessions_and_document_analyses.sql`
 
 Después de cada uno, revisa que no haya errores antes de continuar con el siguiente.
 

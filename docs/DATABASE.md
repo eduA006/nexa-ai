@@ -52,6 +52,40 @@ Un archivo subido por el usuario. El archivo en sí vive en Supabase Storage (bu
 - `MAX_DOCUMENTS_PER_DAY` por usuario (conteo de filas creadas desde el inicio del día UTC).
 - Solo se aceptan PDF, DOCX, XLSX, CSV, validados por extensión **y** por firma de bytes del contenido real (no se confía en la extensión ni en el MIME type del cliente).
 
-## Próximas tablas (Fases 5+)
+### `public.ai_sessions`
 
-`ai_sessions`, `tool_usage`, `document_analyses`, `settings` — se crean cuando sus fases correspondientes lo requieran, con RLS desde su primera migración. Ver `PLAN.md` sección 5 para el diseño conceptual.
+Registro de cada llamada a un proveedor de IA. Se usa para el límite diario (`MAX_AI_REQUESTS_PER_DAY`) y como base del historial (Fase 12).
+
+| Columna | Tipo | Notas |
+|---|---|---|
+| `id` | `uuid` | PK |
+| `user_id` | `uuid` | FK a `auth.users(id)`, `on delete cascade` |
+| `tool` | `text` | ej. `'apa'` |
+| `input` | `text` | nullable; referencia legible del input (ej. nombre del documento) |
+| `result` | `jsonb` | nullable; resumen del resultado |
+| `provider` | `text` | `'gemini'` \| `'groq'` |
+| `model` | `text` | modelo real usado en esa llamada |
+| `tokens_used` | `integer` | nullable |
+| `created_at` | `timestamptz` | default `now()` |
+
+**RLS**: habilitado. `ai_sessions_select_own`, `ai_sessions_insert_own`, restringidas a `auth.uid() = user_id`.
+
+### `public.document_analyses`
+
+Resultado persistido de analizar un documento con una herramienta (ej. diagnóstico APA).
+
+| Columna | Tipo | Notas |
+|---|---|---|
+| `id` | `uuid` | PK |
+| `document_id` | `uuid` | FK a `documents(id)`, `on delete cascade` |
+| `user_id` | `uuid` | FK a `auth.users(id)`, `on delete cascade` — se añadió además de `document_id` para que la política RLS sea directa (`auth.uid() = user_id`), igual que el resto de tablas |
+| `analysis_type` | `text` | ej. `'apa'` |
+| `result` | `jsonb` | hallazgos + resumen, forma específica de cada herramienta |
+| `score` | `integer` | nullable; heurística 0-100, no una certificación de cumplimiento |
+| `created_at` | `timestamptz` | default `now()` |
+
+**RLS**: habilitado. `document_analyses_select_own`, `document_analyses_insert_own`, restringidas a `auth.uid() = user_id`.
+
+## Próximas tablas
+
+`tool_usage`, `settings` — se crean cuando sus fases correspondientes lo requieran, con RLS desde su primera migración. Ver `PLAN.md` sección 5 para el diseño conceptual.

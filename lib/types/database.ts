@@ -86,6 +86,72 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          input: string | null
+          model: string
+          provider: string
+          result: Json | null
+          tokens_used: number | null
+          tool: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          input?: string | null
+          model: string
+          provider: string
+          result?: Json | null
+          tokens_used?: number | null
+          tool: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          input?: string | null
+          model?: string
+          provider?: string
+          result?: Json | null
+          tokens_used?: number | null
+          tool?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      document_analyses: {
+        Row: {
+          analysis_type: string
+          created_at: string
+          document_id: string
+          id: string
+          result: Json
+          score: number | null
+          user_id: string
+        }
+        Insert: {
+          analysis_type: string
+          created_at?: string
+          document_id: string
+          id?: string
+          result: Json
+          score?: number | null
+          user_id: string
+        }
+        Update: {
+          analysis_type?: string
+          created_at?: string
+          document_id?: string
+          id?: string
+          result?: Json
+          score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

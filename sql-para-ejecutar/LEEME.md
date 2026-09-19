@@ -1,12 +1,14 @@
 # Cómo ejecutar estos archivos
 
-En tu proyecto Supabase (el nuevo, `khpqeqiimsqqwhyphuon`):
+En tu proyecto Supabase, en el **SQL Editor** → **New query**, ejecuta los archivos **en orden numérico** (01, 02, 03, 04...), cada uno en su propia query:
 
-1. Entra a **SQL Editor** → **New query**.
-2. Copia y pega el contenido completo de `01_create_profiles.sql`, ejecútalo (Run).
-3. En una nueva query, copia y pega `02_restrict_handle_new_user_execute.sql`, ejecútalo.
-4. Ve a **Database → Advisors → Security** y confirma que no aparecen warnings.
+1. `01_create_profiles.sql`
+2. `02_restrict_handle_new_user_execute.sql`
+3. `03_create_documents.sql`
+4. `04_create_documents_storage.sql`
 
-Deben ejecutarse en este orden (01 antes que 02) porque el segundo depende de que la función creada en el primero ya exista.
+Después de cada uno, revisa que no haya errores antes de continuar con el siguiente.
+
+Al final, ve a **Database → Advisors → Security** y confirma que no aparecen warnings.
 
 Estos mismos archivos están versionados de forma permanente en `supabase/migrations/` (con nombre y formato de migración). Esta carpeta es solo una copia práctica para pegar y ejecutar manualmente; no forma parte de la estructura de código de la app.

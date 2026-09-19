@@ -14,7 +14,8 @@
 - Ajuste posterior: editar la plantilla de email requiere SMTP propio en Supabase Free (no disponible), así que se usa el `{{ .ConfirmationURL }}` por defecto junto con `emailRedirectTo` apuntando a `app/auth/callback/route.ts` (`exchangeCodeForSession`). Requirió agregar `http://localhost:3000/auth/callback` a Authentication → URL Configuration → Redirect URLs.
 - **Fase 2 verificada end-to-end por el usuario en el navegador real**: registro con correo real → email de confirmación recibido → clic en el enlace → sesión creada → dashboard mostrando el saludo personalizado. Fase 2 cerrada.
 - **Fase 3 completada**: onboarding (selección Estudiante/Profesional, guarda `role` en `profiles`), layout `(app)` con sidebar (desktop) y menú lateral (móvil, `Sheet`), dashboard real con saludo, herramientas recomendadas por perfil (marcadas "Próximamente" — el catálogo es real pero las herramientas aún no están implementadas), y placeholders honestos en `/documents` y `/history`. Páginas `/profile` (editar nombre) y `/settings` (cambiar rol, tema claro/oscuro/sistema con `next-themes`) completamente funcionales. Verificado por el usuario en el navegador: login → redirección automática a onboarding (cuenta sin rol) → selección de perfil → dashboard con sidebar. Lint, typecheck y build sin errores.
-- Próxima fase: **Fase 4 — Sistema de documentos + Storage**.
+- **Fase 4 completada**: tabla `documents` (RLS por `user_id`) y bucket privado `documents` en Storage (política RLS por carpeta = `user_id`), aplicados manualmente por el usuario vía `sql-para-ejecutar/03` y `/04`, verificados directamente contra la API REST/Storage. Subida con validación real (extensión + tamaño + firma de bytes, no solo MIME declarado por el cliente), límite diario (`MAX_DOCUMENTS_PER_DAY`), listado, descarga con URL firmada, eliminación. Dashboard actualizado para mostrar documentos reales recientes. **Verificado end-to-end por el usuario en el navegador**: subida, aparición en la lista, descarga y eliminación funcionan correctamente.
+- Próxima fase: **Fase 5 — Capa de IA**.
 
 ## 1. Arquitectura propuesta
 
@@ -125,7 +126,7 @@ Se documentan en `.env.example` cuando se cree en Fase 1/2.
 - [x] **Fase 1** — Base del proyecto + UI + arquitectura (Next.js, TS, Tailwind, shadcn, estructura de carpetas, landing estática, .env.example, docs base) — completada
 - [x] **Fase 2** — Supabase + Auth por email/contraseña (cliente Supabase, proxy.ts, signup/login/logout, confirmación de correo, protección de rutas) — completada y verificada end-to-end por el usuario
 - [x] **Fase 3** — Profiles + onboarding + dashboard (onboarding, layout con sidebar, dashboard real, perfil, configuración) — completada y verificada por el usuario
-- [ ] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, subida, validación MIME/tamaño, listado)
+- [x] **Fase 4** — Sistema de documentos + Storage (tabla `documents`, bucket privado con RLS por carpeta de usuario, subida con validación de tipo/tamaño/firma de bytes, listado, descarga con URL firmada, eliminación) — completada
 - [ ] **Fase 5** — Capa de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`, prompts base)
 - [ ] **Fase 6** — Corrector APA (reglas programadas + IA, diagnóstico UI)
 - [ ] **Fase 7** — Generación DOCX corregido
@@ -150,4 +151,36 @@ Cada fase se cierra solo tras: lint + typecheck + build sin errores críticos, d
 
 ## 4. Próximo paso inmediato
 
-Ejecutar Fase 1: scaffolding de Next.js + TypeScript + Tailwind + shadcn/ui, estructura de carpetas definida arriba, landing estática mínima, `.env.example`, y documentación base en `/docs`.
+Ejecutar Fase 5: capa de abstracción de IA (`AIProvider`, `GeminiProvider`, `GroqProvider`, `AIService`).
+
+## 5. Backlog de ideas futuras (sin priorizar, sin comprometer)
+
+Ideas aportadas por el usuario el 2026-09-19, transcritas tal cual para no perderlas. **Ninguna está planificada todavía** — no aparecen en el dashboard ni en `/tools` hasta que se prioricen explícitamente y se les asigne una fase. Varias requieren evaluar costo/API antes de aceptarlas (ver `docs/COSTS.md`).
+
+Estudiante:
+- Flashcards
+- Organizador de horario con técnica Pomodoro
+- Practicar exámenes con retroalimentación
+- Tutor con IA que analiza el material y evalúa con preguntas estratégicas
+- Función predictiva de conflictos de fechas de entrega
+- Crear plan de estudio
+- Silenciar notificaciones
+- Escáner de estilo de redacción
+- "Cápsula de conocimiento": extraer información de un documento y generar audio (texto a voz, posiblemente vía Gemini)
+- Asistente para trabajos en grupo (reparto equitativo de tareas)
+- Función de debate
+- Auditor de coherencia del documento
+- Simulador de defensa/sustentación con preguntas difíciles
+- Herramienta de síntesis bibliográfica para armar el marco teórico más rápido
+- Rastreador de hábitos de estudio
+
+Profesional:
+- Agente de resumen de reuniones con extracción de tareas pendientes (posible solape con la herramienta 8.8 ya planificada)
+- Conectar datos de Excel y generar informe, permitiendo al usuario elegir qué gráficos generar
+- Analizador de riesgos y contratos
+- Asistente de correo con contexto, sincronizado con calendario; usar API de Gemini para mejorar la redacción
+- Optimizador de presentaciones: el usuario ingresa texto, el sistema sugiere cómo quedaría y genera la diapositiva (el usuario mencionó una "API de ztai" sin más detalle — no se investiga ni se asume nada de esta API hasta que el usuario la confirme)
+- Analizador de tendencias de mercado
+- Generador de actas de juntas directivas
+
+Antes de mover cualquiera de estas a una fase real: confirmar con el usuario prioridad, alcance exacto, y si requiere una API o costo adicional no cubierto en `docs/COSTS.md`.

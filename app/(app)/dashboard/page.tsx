@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { FileText, Clock, Wrench, Sparkles } from "lucide-react";
 import { getCurrentUser } from "@/lib/dal";
+import { getUserDocuments } from "@/lib/documents/queries";
 import {
   Card,
   CardContent,
@@ -10,11 +12,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { RECOMMENDED_TOOLS } from "@/components/tools/catalog";
 
+const TYPE_LABEL: Record<string, string> = {
+  pdf: "PDF",
+  docx: "DOCX",
+  xlsx: "XLSX",
+  csv: "CSV",
+};
+
 export default async function DashboardPage() {
   const session = await getCurrentUser();
   const profile = session?.profile;
   const displayName = profile?.full_name || session?.user.email;
   const recommended = RECOMMENDED_TOOLS[profile?.role ?? "student"];
+  const recentDocuments = (await getUserDocuments()).slice(0, 3);
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-6 py-8 md:px-10">
@@ -52,11 +62,34 @@ export default async function DashboardPage() {
             <CardTitle className="mt-2 text-base">
               Mis documentos recientes
             </CardTitle>
-            <CardDescription>
-              Aún no hay subida de documentos disponible. Esta función llega
-              en una próxima fase.
-            </CardDescription>
+            {recentDocuments.length === 0 && (
+              <CardDescription>
+                Aún no has subido documentos.{" "}
+                <Link href="/documents" className="underline underline-offset-4">
+                  Sube el primero
+                </Link>
+                .
+              </CardDescription>
+            )}
           </CardHeader>
+          {recentDocuments.length > 0 && (
+            <CardContent className="flex flex-col gap-2">
+              {recentDocuments.map((doc) => (
+                <div key={doc.id} className="flex items-center justify-between text-sm">
+                  <span className="truncate">{doc.name}</span>
+                  <Badge variant="secondary">
+                    {TYPE_LABEL[doc.file_type] ?? doc.file_type}
+                  </Badge>
+                </div>
+              ))}
+              <Link
+                href="/documents"
+                className="mt-1 text-sm text-muted-foreground underline underline-offset-4"
+              >
+                Ver todos
+              </Link>
+            </CardContent>
+          )}
         </Card>
 
         <Card>

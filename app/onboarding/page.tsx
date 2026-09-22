@@ -12,8 +12,8 @@ export default async function OnboardingPage() {
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-24 text-center">
-      <div className="flex flex-col items-center gap-3">
-        <Sparkles className="h-6 w-6" />
+      <div className="flex flex-col items-center gap-3 animate-in fade-in-0 slide-in-from-top-2 duration-500">
+        <Sparkles className="h-6 w-6 animate-in zoom-in-50 spin-in-45 duration-700" />
         <h1 className="text-2xl font-semibold tracking-tight">
           ¿Cómo utilizarás NEXA AI?
         </h1>
@@ -23,11 +23,15 @@ export default async function OnboardingPage() {
       </div>
 
       <div className="grid w-full max-w-xl gap-4 sm:grid-cols-2">
-        <form action={setRoleToDashboard}>
+        <form
+          action={setRoleToDashboard}
+          className="animate-in fade-in-0 slide-in-from-bottom-3 duration-500"
+          style={{ animationDelay: "120ms", animationFillMode: "backwards" }}
+        >
           <input type="hidden" name="role" value="student" />
           <button
             type="submit"
-            className="flex h-full w-full flex-col items-center gap-3 rounded-lg border bg-card p-8 text-center transition-colors hover:bg-muted"
+            className="flex h-full w-full flex-col items-center gap-3 rounded-lg border bg-card p-8 text-center transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.98]"
           >
             <GraduationCap className="h-8 w-8" />
             <span className="font-medium">Estudiante</span>
@@ -37,11 +41,15 @@ export default async function OnboardingPage() {
           </button>
         </form>
 
-        <form action={setRoleToDashboard}>
+        <form
+          action={setRoleToDashboard}
+          className="animate-in fade-in-0 slide-in-from-bottom-3 duration-500"
+          style={{ animationDelay: "220ms", animationFillMode: "backwards" }}
+        >
           <input type="hidden" name="role" value="professional" />
           <button
             type="submit"
-            className="flex h-full w-full flex-col items-center gap-3 rounded-lg border bg-card p-8 text-center transition-colors hover:bg-muted"
+            className="flex h-full w-full flex-col items-center gap-3 rounded-lg border bg-card p-8 text-center transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.98]"
           >
             <Briefcase className="h-8 w-8" />
             <span className="font-medium">Profesional</span>

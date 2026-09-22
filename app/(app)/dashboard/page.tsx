@@ -19,31 +19,49 @@ const TYPE_LABEL: Record<string, string> = {
   csv: "CSV",
 };
 
+function greetingName(fullName: string | null | undefined, email: string | undefined) {
+  if (fullName) return fullName.trim().split(/\s+/)[0];
+  if (!email) return "";
+  const alias = email.split("@")[0].replace(/[._-]+/g, " ").trim();
+  return alias.charAt(0).toUpperCase() + alias.slice(1);
+}
+
 export default async function DashboardPage() {
   const session = await getCurrentUser();
   const profile = session?.profile;
-  const displayName = profile?.full_name || session?.user.email;
+  const displayName = greetingName(profile?.full_name, session?.user.email);
   const recommended = RECOMMENDED_TOOLS[profile?.role ?? "student"];
   const recentDocuments = (await getUserDocuments()).slice(0, 3);
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-6 py-8 md:px-10">
-      <div>
+      <div className="animate-in fade-in-0 slide-in-from-top-2 duration-500">
         <h1 className="text-2xl font-semibold tracking-tight">
           Hola, {displayName} 👋
         </h1>
         <p className="text-muted-foreground">¿Qué necesitas hacer hoy?</p>
       </div>
 
-      <section>
+      <section
+        className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+        style={{ animationDelay: "80ms", animationFillMode: "backwards" }}
+      >
         <h2 className="mb-3 text-sm font-medium text-muted-foreground">
           Herramientas recomendadas
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {recommended.map((tool) =>
+          {recommended.map((tool, index) =>
             tool.available ? (
-              <Link key={tool.slug} href={`/tools/${tool.slug}`}>
-                <Card className="h-full transition-colors hover:bg-muted/50">
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+                style={{
+                  animationDelay: `${140 + index * 60}ms`,
+                  animationFillMode: "backwards",
+                }}
+              >
+                <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md">
                   <CardHeader>
                     <tool.icon className="h-5 w-5" />
                     <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
@@ -52,7 +70,14 @@ export default async function DashboardPage() {
                 </Card>
               </Link>
             ) : (
-              <Card key={tool.slug} className="opacity-80">
+              <Card
+                key={tool.slug}
+                className="animate-in fade-in-0 slide-in-from-bottom-2 opacity-80 duration-500"
+                style={{
+                  animationDelay: `${140 + index * 60}ms`,
+                  animationFillMode: "backwards",
+                }}
+              >
                 <CardHeader>
                   <tool.icon className="h-5 w-5" />
                   <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
@@ -67,8 +92,11 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
+      <div
+        className="grid gap-4 lg:grid-cols-2 animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+        style={{ animationDelay: "220ms", animationFillMode: "backwards" }}
+      >
+        <Card className="transition-shadow hover:shadow-md">
           <CardHeader>
             <FileText className="h-5 w-5" />
             <CardTitle className="mt-2 text-base">
@@ -104,7 +132,7 @@ export default async function DashboardPage() {
           )}
         </Card>
 
-        <Card>
+        <Card className="transition-shadow hover:shadow-md">
           <CardHeader>
             <Clock className="h-5 w-5" />
             <CardTitle className="mt-2 text-base">Actividad reciente</CardTitle>
@@ -116,7 +144,10 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      <Card>
+      <Card
+        className="transition-shadow hover:shadow-md animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+        style={{ animationDelay: "280ms", animationFillMode: "backwards" }}
+      >
         <CardHeader>
           <Wrench className="h-5 w-5" />
           <CardTitle className="mt-2 text-base">
@@ -128,7 +159,10 @@ export default async function DashboardPage() {
         </CardHeader>
       </Card>
 
-      <Card className="border-dashed">
+      <Card
+        className="border-dashed animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+        style={{ animationDelay: "340ms", animationFillMode: "backwards" }}
+      >
         <CardHeader className="items-center text-center">
           <Sparkles className="h-5 w-5" />
           <CardTitle className="mt-2 text-base">

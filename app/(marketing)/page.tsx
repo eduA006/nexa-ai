@@ -70,45 +70,85 @@ export default function LandingPage() {
             NEXA AI
           </div>
           <nav className="hidden items-center gap-6 text-sm text-muted-foreground sm:flex">
-            <a href="#caracteristicas" className="hover:text-foreground">
+            <a href="#caracteristicas" className="transition-colors hover:text-foreground">
               Características
             </a>
-            <a href="#herramientas" className="hover:text-foreground">
+            <a href="#herramientas" className="transition-colors hover:text-foreground">
               Herramientas
             </a>
-            <a href="#privacidad" className="hover:text-foreground">
+            <a href="#privacidad" className="transition-colors hover:text-foreground">
               Privacidad
             </a>
           </nav>
-          <Link href="/login" className={buttonVariants({ size: "sm" })}>
-            Comenzar gratis
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/login"
+              className={buttonVariants({
+                variant: "ghost",
+                size: "sm",
+                className: "hidden sm:inline-flex",
+              })}
+            >
+              Iniciar sesión
+            </Link>
+            <Link
+              href="/signup"
+              className={buttonVariants({
+                size: "sm",
+                className: "transition-transform hover:-translate-y-0.5",
+              })}
+            >
+              Comenzar gratis
+            </Link>
+          </div>
         </div>
       </header>
 
       <main className="flex flex-1 flex-col">
         {/* Hero */}
         <section className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-6 py-24 text-center">
-          <Badge variant="secondary" className="gap-1.5">
+          <Badge
+            variant="secondary"
+            className="gap-1.5 animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+          >
             <Sparkles className="h-3.5 w-3.5" />
             En desarrollo activo
           </Badge>
-          <h1 className="max-w-3xl text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+          <h1
+            className="max-w-3xl text-balance text-4xl font-semibold tracking-tight animate-in fade-in-0 slide-in-from-bottom-3 duration-700 sm:text-5xl"
+            style={{ animationDelay: "80ms", animationFillMode: "backwards" }}
+          >
             Una plataforma inteligente para estudiar, crear y trabajar.
           </h1>
-          <p className="max-w-xl text-balance text-lg text-muted-foreground">
+          <p
+            className="max-w-xl text-balance text-lg text-muted-foreground animate-in fade-in-0 slide-in-from-bottom-3 duration-700"
+            style={{ animationDelay: "160ms", animationFillMode: "backwards" }}
+          >
             NEXA AI combina reglas programadas y modelos de IA para ayudarte a
             revisar, analizar y generar documentos académicos y profesionales,
             sin sustituir tu criterio.
           </p>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link href="/login" className={buttonVariants({ size: "lg" })}>
+          <div
+            className="flex flex-col gap-3 animate-in fade-in-0 slide-in-from-bottom-3 duration-700 sm:flex-row"
+            style={{ animationDelay: "240ms", animationFillMode: "backwards" }}
+          >
+            <Link
+              href="/signup"
+              className={buttonVariants({
+                size: "lg",
+                className: "transition-transform hover:-translate-y-0.5 active:scale-[0.98]",
+              })}
+            >
               Comenzar gratis
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 transition-transform group-hover/button:translate-x-0.5" />
             </Link>
             <a
               href="#como-funciona"
-              className={buttonVariants({ size: "lg", variant: "outline" })}
+              className={buttonVariants({
+                size: "lg",
+                variant: "outline",
+                className: "transition-transform hover:-translate-y-0.5",
+              })}
             >
               Ver cómo funciona
             </a>
@@ -118,7 +158,7 @@ export default function LandingPage() {
         {/* Características */}
         <section id="caracteristicas" className="border-t bg-muted/30">
           <div className="mx-auto grid w-full max-w-6xl gap-6 px-6 py-20 sm:grid-cols-3">
-            <Card className="border-none bg-transparent shadow-none">
+            <Card className="border-none bg-transparent shadow-none transition-transform duration-200 hover:-translate-y-1">
               <CardHeader>
                 <FileCheck2 className="h-6 w-6" />
                 <CardTitle className="mt-2">Reglas + IA</CardTitle>
@@ -128,7 +168,7 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
             </Card>
-            <Card className="border-none bg-transparent shadow-none">
+            <Card className="border-none bg-transparent shadow-none transition-transform duration-200 hover:-translate-y-1">
               <CardHeader>
                 <MessagesSquare className="h-6 w-6" />
                 <CardTitle className="mt-2">Conversa con tus documentos</CardTitle>
@@ -138,7 +178,7 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
             </Card>
-            <Card className="border-none bg-transparent shadow-none">
+            <Card className="border-none bg-transparent shadow-none transition-transform duration-200 hover:-translate-y-1">
               <CardHeader>
                 <ShieldCheck className="h-6 w-6" />
                 <CardTitle className="mt-2">Tus datos, protegidos</CardTitle>
@@ -154,7 +194,7 @@ export default function LandingPage() {
         {/* Para estudiantes / profesionales */}
         <section id="herramientas" className="mx-auto w-full max-w-6xl px-6 py-20">
           <div className="grid gap-6 sm:grid-cols-2">
-            <Card>
+            <Card className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
               <CardHeader>
                 <GraduationCap className="h-6 w-6" />
                 <CardTitle className="mt-2">Para estudiantes</CardTitle>
@@ -174,7 +214,7 @@ export default function LandingPage() {
                 </ul>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
               <CardHeader>
                 <Briefcase className="h-6 w-6" />
                 <CardTitle className="mt-2">Para profesionales</CardTitle>
@@ -205,7 +245,10 @@ export default function LandingPage() {
             </h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-3">
               {steps.map((step, index) => (
-                <div key={step.title} className="flex flex-col items-start gap-3">
+                <div
+                  key={step.title}
+                  className="flex flex-col items-start gap-3 transition-transform duration-200 hover:-translate-y-1"
+                >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full border bg-background text-sm font-medium">
                     {index + 1}
                   </div>
@@ -244,7 +287,13 @@ export default function LandingPage() {
             <p className="max-w-md text-muted-foreground">
               Crea una cuenta con tu correo y elige tu perfil para empezar.
             </p>
-            <Link href="/login" className={buttonVariants({ size: "lg" })}>
+            <Link
+              href="/signup"
+              className={buttonVariants({
+                size: "lg",
+                className: "transition-transform hover:-translate-y-0.5 active:scale-[0.98]",
+              })}
+            >
               Comenzar gratis
               <ArrowRight className="h-4 w-4" />
             </Link>

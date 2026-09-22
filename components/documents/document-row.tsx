@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { Download, Trash2, Loader2, FileCheck2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,47 +23,49 @@ const TYPE_LABEL: Record<string, string> = {
 
 export function DocumentRow({ doc }: { doc: Document }) {
   const [isDeleting, startDelete] = useTransition();
-  const [downloading, setDownloading] = useState(false);
-  const [downloadingCorrected, setDownloadingCorrected] = useState(false);
+  const [downloading, startDownload] = useTransition();
+  const [downloadingCorrected, startDownloadCorrected] = useTransition();
 
-  async function handleDownload() {
+  // Un Server Action invocado directo (sin <form> ni startTransition) desde
+  // un event handler no se despacha correctamente en esta versión de
+  // Next.js — ver node_modules/next/dist/docs/01-app/02-guides/server-actions.md.
+  function handleDownload() {
     // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
     // luego: si se espera al await antes de window.open(), varios
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
-    setDownloading(true);
-    try {
-      const url = await getDownloadUrl(doc.storage_path);
-      if (url && tab) {
-        tab.location.href = url;
-      } else {
+    startDownload(async () => {
+      try {
+        const url = await getDownloadUrl(doc.storage_path);
+        if (url && tab) {
+          tab.location.href = url;
+        } else {
+          tab?.close();
+        }
+      } catch (err) {
+        console.error("[Documents] Error al descargar:", err);
         tab?.close();
       }
-    } catch (err) {
-      console.error("[Documents] Error al descargar:", err);
-      tab?.close();
-    } finally {
-      setDownloading(false);
-    }
+    });
   }
 
-  async function handleDownloadCorrected() {
-    if (!doc.processed_storage_path) return;
+  function handleDownloadCorrected() {
+    const processedPath = doc.processed_storage_path;
+    if (!processedPath) return;
     const tab = window.open("", "_blank", "noopener,noreferrer");
-    setDownloadingCorrected(true);
-    try {
-      const url = await getDownloadUrl(doc.processed_storage_path);
-      if (url && tab) {
-        tab.location.href = url;
-      } else {
+    startDownloadCorrected(async () => {
+      try {
+        const url = await getDownloadUrl(processedPath);
+        if (url && tab) {
+          tab.location.href = url;
+        } else {
+          tab?.close();
+        }
+      } catch (err) {
+        console.error("[Documents] Error al descargar versión corregida:", err);
         tab?.close();
       }
-    } catch (err) {
-      console.error("[Documents] Error al descargar versión corregida:", err);
-      tab?.close();
-    } finally {
-      setDownloadingCorrected(false);
-    }
+    });
   }
 
   function handleDelete() {

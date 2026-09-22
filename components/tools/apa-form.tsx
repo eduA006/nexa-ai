@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { Download, Loader2 } from "lucide-react";
 import {
   runApaAnalysis,
@@ -16,35 +16,38 @@ export function ApaForm({ documents }: { documents: Document[] }) {
     runApaAnalysis,
     undefined,
   );
-  const [generating, setGenerating] = useState(false);
+  const [generating, startGenerate] = useTransition();
   const [generateError, setGenerateError] = useState<string | null>(null);
 
   const result = state && "result" in state ? state.result : null;
   const error = state && "error" in state ? state.error : null;
 
-  async function handleGenerateCorrected() {
+  function handleGenerateCorrected() {
     if (!result) return;
     // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
     // luego: si se espera al await antes de window.open(), varios
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
-    setGenerating(true);
     setGenerateError(null);
-    try {
-      const outcome = await generateCorrectedDocument(result.documentId);
-      if ("error" in outcome) {
-        setGenerateError(outcome.error);
+    // Un Server Action invocado directo (sin <form> ni startTransition)
+    // desde un event handler no se despacha correctamente en esta
+    // versión de Next.js — ver node_modules/next/dist/docs/01-app/
+    // 02-guides/server-actions.md.
+    startGenerate(async () => {
+      try {
+        const outcome = await generateCorrectedDocument(result.documentId);
+        if ("error" in outcome) {
+          setGenerateError(outcome.error);
+          tab?.close();
+          return;
+        }
+        if (tab) tab.location.href = outcome.url;
+      } catch (err) {
+        console.error("[Apa] Error al generar documento corregido:", err);
+        setGenerateError("Ocurrió un error al generar el documento corregido. Inténtalo nuevamente.");
         tab?.close();
-        return;
       }
-      if (tab) tab.location.href = outcome.url;
-    } catch (err) {
-      console.error("[Apa] Error al generar documento corregido:", err);
-      setGenerateError("Ocurrió un error al generar el documento corregido. Inténtalo nuevamente.");
-      tab?.close();
-    } finally {
-      setGenerating(false);
-    }
+    });
   }
 
   return (

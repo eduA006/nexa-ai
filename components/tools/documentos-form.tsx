@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { Loader2, Download } from "lucide-react";
 import { runGenerarDocumento, type DocumentoActionState } from "@/lib/tools/documentos/actions";
 import { getDownloadUrl } from "@/lib/documents/actions";
@@ -20,35 +20,38 @@ export function DocumentosForm() {
     runGenerarDocumento,
     undefined,
   );
-  const [downloading, setDownloading] = useState(false);
+  const [downloading, startDownload] = useTransition();
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const result = state && "result" in state ? state.result : null;
   const error = state && "error" in state ? state.error : null;
 
-  async function handleDownload() {
+  function handleDownload() {
     if (!result) return;
     setDownloadError(null);
     // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
     // luego: si se espera al await antes de window.open(), varios
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
-    setDownloading(true);
-    try {
-      const url = await getDownloadUrl(result.storagePath);
-      if (url && tab) {
-        tab.location.href = url;
-      } else {
+    // Un Server Action invocado directo (sin <form> ni startTransition)
+    // desde un event handler no se despacha correctamente en esta
+    // versión de Next.js — ver node_modules/next/dist/docs/01-app/
+    // 02-guides/server-actions.md.
+    startDownload(async () => {
+      try {
+        const url = await getDownloadUrl(result.storagePath);
+        if (url && tab) {
+          tab.location.href = url;
+        } else {
+          tab?.close();
+          setDownloadError("No se pudo generar el enlace de descarga. Inténtalo nuevamente.");
+        }
+      } catch (err) {
+        console.error("[Documentos] Error al descargar:", err);
         tab?.close();
-        setDownloadError("No se pudo generar el enlace de descarga. Inténtalo nuevamente.");
+        setDownloadError("Ocurrió un error al descargar el documento. Inténtalo nuevamente.");
       }
-    } catch (err) {
-      console.error("[Documentos] Error al descargar:", err);
-      tab?.close();
-      setDownloadError("Ocurrió un error al descargar el documento. Inténtalo nuevamente.");
-    } finally {
-      setDownloading(false);
-    }
+    });
   }
 
   return (

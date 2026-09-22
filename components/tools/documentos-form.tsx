@@ -53,7 +53,7 @@ export function DocumentosForm() {
             id="type"
             name="type"
             defaultValue="informe"
-            className="h-9 w-full max-w-xs rounded-md border border-input bg-transparent px-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="h-9 w-full max-w-xs rounded-md win98-well border border-input bg-input px-3 text-sm transition-shadow focus-visible:shadow-sm"
           >
             {TYPES.map((t) => (
               <option key={t.value} value={t.value}>
@@ -72,7 +72,7 @@ export function DocumentosForm() {
             name="instructions"
             required
             rows={8}
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 

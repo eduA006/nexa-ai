@@ -31,7 +31,7 @@ export default async function OnboardingPage() {
           <input type="hidden" name="role" value="student" />
           <button
             type="submit"
-            className="flex h-full w-full flex-col items-center gap-3 rounded-lg border bg-card p-8 text-center transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.98]"
+            className="win98-panel flex h-full w-full flex-col items-center gap-3 bg-card p-8 text-center hover:bg-muted"
           >
             <GraduationCap className="h-8 w-8" />
             <span className="font-medium">Estudiante</span>
@@ -49,7 +49,7 @@ export default async function OnboardingPage() {
           <input type="hidden" name="role" value="professional" />
           <button
             type="submit"
-            className="flex h-full w-full flex-col items-center gap-3 rounded-lg border bg-card p-8 text-center transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted hover:shadow-md active:translate-y-0 active:scale-[0.98]"
+            className="win98-panel flex h-full w-full flex-col items-center gap-3 bg-card p-8 text-center hover:bg-muted"
           >
             <Briefcase className="h-8 w-8" />
             <span className="font-medium">Profesional</span>

@@ -46,7 +46,7 @@ export function CodigoForm() {
               id="action"
               name="action"
               defaultValue="explicar"
-              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm transition-shadow focus-visible:shadow-sm"
+              className="h-9 rounded-md win98-well border border-input bg-input px-3 text-sm transition-shadow focus-visible:shadow-sm"
             >
               {ACTIONS.map((a) => (
                 <option key={a.value} value={a.value}>
@@ -65,7 +65,7 @@ export function CodigoForm() {
             required
             rows={14}
             placeholder="Pega tu código aquí…"
-            className="w-full rounded-md border border-input bg-transparent p-3 font-mono text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 font-mono text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 

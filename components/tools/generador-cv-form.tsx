@@ -107,7 +107,7 @@ export function GeneradorCvForm() {
             id="profileNotes"
             name="profileNotes"
             rows={3}
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 
@@ -117,7 +117,7 @@ export function GeneradorCvForm() {
             id="experienceNotes"
             name="experienceNotes"
             rows={6}
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 
@@ -127,7 +127,7 @@ export function GeneradorCvForm() {
             id="educationNotes"
             name="educationNotes"
             rows={3}
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 
@@ -137,7 +137,7 @@ export function GeneradorCvForm() {
             id="skillsNotes"
             name="skillsNotes"
             rows={2}
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 

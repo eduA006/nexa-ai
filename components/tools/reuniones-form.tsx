@@ -28,7 +28,7 @@ export function ReunionesForm() {
             required
             rows={12}
             placeholder="Pega aquí la transcripción o tus notas de la reunión…"
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 

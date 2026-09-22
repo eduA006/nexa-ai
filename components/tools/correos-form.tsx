@@ -55,7 +55,7 @@ export function CorreosForm() {
               name="action"
               value={selectedAction}
               onChange={(e) => setSelectedAction(e.target.value as ActionValue)}
-              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm transition-shadow focus-visible:shadow-sm"
+              className="h-9 rounded-md win98-well border border-input bg-input px-3 text-sm transition-shadow focus-visible:shadow-sm"
             >
               {ACTIONS.map((a) => (
                 <option key={a.value} value={a.value}>
@@ -79,7 +79,7 @@ export function CorreosForm() {
             name="text"
             required
             rows={10}
-            className="w-full rounded-md border border-input bg-transparent p-3 text-sm transition-shadow focus-visible:shadow-sm"
+            className="w-full rounded-md win98-well border border-input bg-input p-3 text-sm transition-shadow focus-visible:shadow-sm"
           />
         </div>
 

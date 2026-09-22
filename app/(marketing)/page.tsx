@@ -63,20 +63,20 @@ const steps = [
 export default function LandingPage() {
   return (
     <div className="flex flex-1 flex-col bg-background">
-      <header className="sticky top-0 z-10 border-b bg-background/80 backdrop-blur">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2 font-semibold tracking-tight">
-            <Sparkles className="h-5 w-5" />
+      <header className="win98-titlebar sticky top-0 z-10">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-1.5">
+          <div className="flex items-center gap-2 text-sm font-bold">
+            <Sparkles className="h-4 w-4" />
             NEXA AI
           </div>
-          <nav className="hidden items-center gap-6 text-sm text-muted-foreground sm:flex">
-            <a href="#caracteristicas" className="transition-colors hover:text-foreground">
+          <nav className="hidden items-center gap-6 text-sm text-white/90 sm:flex">
+            <a href="#caracteristicas" className="hover:text-white">
               Características
             </a>
-            <a href="#herramientas" className="transition-colors hover:text-foreground">
+            <a href="#herramientas" className="hover:text-white">
               Herramientas
             </a>
-            <a href="#privacidad" className="transition-colors hover:text-foreground">
+            <a href="#privacidad" className="hover:text-white">
               Privacidad
             </a>
           </nav>
@@ -84,7 +84,7 @@ export default function LandingPage() {
             <Link
               href="/login"
               className={buttonVariants({
-                variant: "ghost",
+                variant: "secondary",
                 size: "sm",
                 className: "hidden sm:inline-flex",
               })}
@@ -94,8 +94,8 @@ export default function LandingPage() {
             <Link
               href="/signup"
               className={buttonVariants({
+                variant: "secondary",
                 size: "sm",
-                className: "transition-transform hover:-translate-y-0.5",
               })}
             >
               Comenzar gratis
@@ -194,7 +194,7 @@ export default function LandingPage() {
         {/* Para estudiantes / profesionales */}
         <section id="herramientas" className="mx-auto w-full max-w-6xl px-6 py-20">
           <div className="grid gap-6 sm:grid-cols-2">
-            <Card className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
+            <Card>
               <CardHeader>
                 <GraduationCap className="h-6 w-6" />
                 <CardTitle className="mt-2">Para estudiantes</CardTitle>
@@ -214,7 +214,7 @@ export default function LandingPage() {
                 </ul>
               </CardContent>
             </Card>
-            <Card className="transition-all duration-200 hover:-translate-y-1 hover:shadow-md">
+            <Card>
               <CardHeader>
                 <Briefcase className="h-6 w-6" />
                 <CardTitle className="mt-2">Para profesionales</CardTitle>
@@ -249,7 +249,7 @@ export default function LandingPage() {
                   key={step.title}
                   className="flex flex-col items-start gap-3 transition-transform duration-200 hover:-translate-y-1"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full border bg-background text-sm font-medium">
+                  <div className="win98-panel flex h-8 w-8 items-center justify-center bg-secondary text-sm font-bold">
                     {index + 1}
                   </div>
                   <step.icon className="h-5 w-5 text-muted-foreground" />

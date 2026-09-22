@@ -48,73 +48,85 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * Tema "Windows 98 retro". Paleta y bordes biselados clásicos en vez
+ * de los tokens shadcn por defecto. --radius en 0 aplana TODOS los
+ * `rounded-*` de la app de una sola vez, porque radius-sm/md/lg/xl/etc
+ * arriba se derivan de esta única variable.
+ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #008080;
+  --foreground: #000000;
+  --card: #c0c0c0;
+  --card-foreground: #000000;
+  --popover: #c0c0c0;
+  --popover-foreground: #000000;
+  --primary: #000080;
+  --primary-foreground: #ffffff;
+  --secondary: #c0c0c0;
+  --secondary-foreground: #000000;
+  --muted: #d4d0c8;
+  --muted-foreground: #444444;
+  --accent: #000080;
+  --accent-foreground: #ffffff;
+  --destructive: #aa0000;
+  --border: #808080;
+  --input: #ffffff;
+  --ring: #000080;
+  --chart-1: #000080;
+  --chart-2: #808000;
+  --chart-3: #800080;
+  --chart-4: #008080;
+  --chart-5: #aa0000;
+  --radius: 0px;
+  --sidebar: #c0c0c0;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000080;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #000080;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #808080;
+  --sidebar-ring: #000080;
+  --font-sans: Tahoma, "Segoe UI", Verdana, sans-serif;
 }
 
+/*
+ * El tema retro no distingue claro/oscuro (Windows 98 no tenía "modo
+ * oscuro") — .dark usa la misma paleta para que el switch de tema
+ * existente no rompa la estética en vez de generar un híbrido raro.
+ */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #008080;
+  --foreground: #000000;
+  --card: #c0c0c0;
+  --card-foreground: #000000;
+  --popover: #c0c0c0;
+  --popover-foreground: #000000;
+  --primary: #000080;
+  --primary-foreground: #ffffff;
+  --secondary: #c0c0c0;
+  --secondary-foreground: #000000;
+  --muted: #d4d0c8;
+  --muted-foreground: #444444;
+  --accent: #000080;
+  --accent-foreground: #ffffff;
+  --destructive: #aa0000;
+  --border: #808080;
+  --input: #ffffff;
+  --ring: #000080;
+  --chart-1: #000080;
+  --chart-2: #808000;
+  --chart-3: #800080;
+  --chart-4: #008080;
+  --chart-5: #aa0000;
+  --sidebar: #c0c0c0;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000080;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #000080;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #808080;
+  --sidebar-ring: #000080;
 }
 
 @layer base {
@@ -127,4 +139,97 @@
   html {
     @apply font-sans;
   }
+}
+
+@layer components {
+  /* Bisel 3D "elevado" — paneles, tarjetas, ventanas. */
+  .win98-panel {
+    box-shadow:
+      inset 1px 1px 0 0 #ffffff,
+      inset -1px -1px 0 0 #000000,
+      inset 2px 2px 0 0 #dfdfdf,
+      inset -2px -2px 0 0 #808080;
+  }
+
+  /* Bisel 3D "hundido" — inputs, textareas, áreas de contenido. */
+  .win98-well {
+    box-shadow:
+      inset 1px 1px 0 0 #000000,
+      inset -1px -1px 0 0 #ffffff,
+      inset 2px 2px 0 0 #808080,
+      inset -2px -2px 0 0 #dfdfdf;
+  }
+
+  /* Botón: elevado en reposo, hundido al presionar (como un botón real de Win98). */
+  .win98-btn {
+    box-shadow:
+      inset 1px 1px 0 0 #ffffff,
+      inset -1px -1px 0 0 #000000,
+      inset 2px 2px 0 0 #dfdfdf,
+      inset -2px -2px 0 0 #808080;
+  }
+  .win98-btn:active:not(:disabled) {
+    box-shadow:
+      inset 1px 1px 0 0 #000000,
+      inset -1px -1px 0 0 #ffffff,
+      inset 2px 2px 0 0 #808080,
+      inset -2px -2px 0 0 #dfdfdf;
+  }
+
+  /* Botón "plano" (ghost): sin bisel en reposo, aparece al pasar el mouse. */
+  .win98-btn-flat:hover:not(:disabled),
+  .win98-btn-flat[aria-expanded="true"] {
+    background-color: var(--muted);
+    box-shadow:
+      inset 1px 1px 0 0 #ffffff,
+      inset -1px -1px 0 0 #000000,
+      inset 2px 2px 0 0 #dfdfdf,
+      inset -2px -2px 0 0 #808080;
+  }
+  .win98-btn-flat:active:not(:disabled) {
+    box-shadow:
+      inset 1px 1px 0 0 #000000,
+      inset -1px -1px 0 0 #ffffff,
+      inset 2px 2px 0 0 #808080,
+      inset -2px -2px 0 0 #dfdfdf;
+  }
+
+  /* Barra de título clásica — degradado azul marino, texto blanco. */
+  .win98-titlebar {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: #ffffff;
+  }
+
+  /* Botoncitos cuadrados de la barra de título (_, □, x). */
+  .win98-titlebar-btn {
+    box-shadow:
+      inset 1px 1px 0 0 #ffffff,
+      inset -1px -1px 0 0 #000000,
+      inset 2px 2px 0 0 #dfdfdf,
+      inset -2px -2px 0 0 #808080;
+  }
+  .win98-titlebar-btn:active {
+    box-shadow:
+      inset 1px 1px 0 0 #000000,
+      inset -1px -1px 0 0 #ffffff,
+      inset 2px 2px 0 0 #808080,
+      inset -2px -2px 0 0 #dfdfdf;
+  }
+}
+
+/* Scrollbar cuadrada y gris, coherente con el resto del tema. */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #d4d0c8;
+}
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  box-shadow:
+    inset 1px 1px 0 0 #ffffff,
+    inset -1px -1px 0 0 #000000,
+    inset 2px 2px 0 0 #dfdfdf,
+    inset -2px -2px 0 0 #808080;
 }

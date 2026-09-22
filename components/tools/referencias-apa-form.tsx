@@ -166,7 +166,7 @@ export function ReferenciasApaForm() {
           id="sourceType"
           value={sourceType}
           onChange={(e) => setSourceType(e.target.value as SourceType)}
-          className="h-9 w-full max-w-xs rounded-md border border-input bg-transparent px-3 text-sm transition-shadow focus-visible:shadow-sm"
+          className="h-9 w-full max-w-xs rounded-md win98-well border border-input bg-input px-3 text-sm transition-shadow focus-visible:shadow-sm"
         >
           {Object.entries(SOURCE_LABELS).map(([value, label]) => (
             <option key={value} value={value}>
@@ -303,7 +303,7 @@ export function ReferenciasApaForm() {
                 id="thesisType"
                 value={fields.thesisType}
                 onChange={(e) => update("thesisType", e.target.value)}
-                className="h-9 rounded-md border border-input bg-transparent px-3 text-sm"
+                className="h-9 rounded-md win98-well border border-input bg-input px-3 text-sm"
               >
                 <option>Tesis de licenciatura</option>
                 <option>Tesis de maestría</option>

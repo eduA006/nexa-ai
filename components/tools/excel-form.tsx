@@ -23,7 +23,7 @@ export function ExcelForm({ documents }: { documents: Document[] }) {
           name="documentId"
           required
           disabled={documents.length === 0}
-          className="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-sm transition-shadow focus-visible:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+          className="h-9 flex-1 rounded-md win98-well border border-input bg-input px-3 text-sm transition-shadow focus-visible:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
         >
           <option value="">Selecciona un documento XLSX o CSV…</option>
           {documents.map((doc) => (

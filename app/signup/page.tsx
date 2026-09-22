@@ -2,21 +2,24 @@ import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import {
-  Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { RetroWindow } from "@/components/retro/title-bar";
 import { SignupForm } from "@/components/auth/signup-form";
 
 export default function SignupPage() {
   return (
     <div className="flex flex-1 items-center justify-center px-6 py-24">
-      <Card className="w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-500">
+      <RetroWindow
+        title="Crear cuenta"
+        icon={<Sparkles className="h-3.5 w-3.5" />}
+        className="w-full max-w-sm animate-in fade-in-0 zoom-in-95 duration-500"
+      >
         <CardHeader className="items-center text-center">
-          <Sparkles className="h-6 w-6 animate-in zoom-in-50 spin-in-45 duration-700" />
           <CardTitle className="mt-2">Crear cuenta</CardTitle>
           <CardDescription>
             Regístrate con tu correo para empezar a usar NEXA AI.
@@ -43,7 +46,7 @@ export default function SignupPage() {
             Volver al inicio
           </Link>
         </CardFooter>
-      </Card>
+      </RetroWindow>
     </div>
   );
 }

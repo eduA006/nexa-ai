@@ -32,12 +32,18 @@ export function DocumentRow({ doc }: { doc: Document }) {
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
     setDownloading(true);
-    const url = await getDownloadUrl(doc.storage_path);
-    setDownloading(false);
-    if (url && tab) {
-      tab.location.href = url;
-    } else {
+    try {
+      const url = await getDownloadUrl(doc.storage_path);
+      if (url && tab) {
+        tab.location.href = url;
+      } else {
+        tab?.close();
+      }
+    } catch (err) {
+      console.error("[Documents] Error al descargar:", err);
       tab?.close();
+    } finally {
+      setDownloading(false);
     }
   }
 
@@ -45,12 +51,18 @@ export function DocumentRow({ doc }: { doc: Document }) {
     if (!doc.processed_storage_path) return;
     const tab = window.open("", "_blank", "noopener,noreferrer");
     setDownloadingCorrected(true);
-    const url = await getDownloadUrl(doc.processed_storage_path);
-    setDownloadingCorrected(false);
-    if (url && tab) {
-      tab.location.href = url;
-    } else {
+    try {
+      const url = await getDownloadUrl(doc.processed_storage_path);
+      if (url && tab) {
+        tab.location.href = url;
+      } else {
+        tab?.close();
+      }
+    } catch (err) {
+      console.error("[Documents] Error al descargar versión corregida:", err);
       tab?.close();
+    } finally {
+      setDownloadingCorrected(false);
     }
   }
 

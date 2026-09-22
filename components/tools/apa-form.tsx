@@ -30,14 +30,21 @@ export function ApaForm({ documents }: { documents: Document[] }) {
     const tab = window.open("", "_blank", "noopener,noreferrer");
     setGenerating(true);
     setGenerateError(null);
-    const outcome = await generateCorrectedDocument(result.documentId);
-    setGenerating(false);
-    if ("error" in outcome) {
-      setGenerateError(outcome.error);
+    try {
+      const outcome = await generateCorrectedDocument(result.documentId);
+      if ("error" in outcome) {
+        setGenerateError(outcome.error);
+        tab?.close();
+        return;
+      }
+      if (tab) tab.location.href = outcome.url;
+    } catch (err) {
+      console.error("[Apa] Error al generar documento corregido:", err);
+      setGenerateError("Ocurrió un error al generar el documento corregido. Inténtalo nuevamente.");
       tab?.close();
-      return;
+    } finally {
+      setGenerating(false);
     }
-    if (tab) tab.location.href = outcome.url;
   }
 
   return (

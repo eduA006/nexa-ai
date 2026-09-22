@@ -173,9 +173,12 @@ export async function generateCorrectedDocument(
 
   revalidatePath("/documents");
 
+  // `download: true` fuerza Content-Disposition: attachment — sin esto,
+  // el navegador intenta mostrar el archivo inline y, como no sabe
+  // renderizar un .docx, la pestaña queda en blanco sin descargar nada.
   const { data: signed, error: signError } = await supabase.storage
     .from(DOCUMENTS_BUCKET)
-    .createSignedUrl(correctedPath, 60);
+    .createSignedUrl(correctedPath, 60, { download: `corregido-${doc.original_filename}` });
 
   if (signError || !signed) return { error: "No se pudo generar el enlace de descarga." };
 

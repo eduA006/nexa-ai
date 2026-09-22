@@ -21,23 +21,33 @@ export function DocumentosForm() {
     undefined,
   );
   const [downloading, setDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const result = state && "result" in state ? state.result : null;
   const error = state && "error" in state ? state.error : null;
 
   async function handleDownload() {
     if (!result) return;
+    setDownloadError(null);
     // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
     // luego: si se espera al await antes de window.open(), varios
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
     setDownloading(true);
-    const url = await getDownloadUrl(result.storagePath);
-    setDownloading(false);
-    if (url && tab) {
-      tab.location.href = url;
-    } else {
+    try {
+      const url = await getDownloadUrl(result.storagePath);
+      if (url && tab) {
+        tab.location.href = url;
+      } else {
+        tab?.close();
+        setDownloadError("No se pudo generar el enlace de descarga. Inténtalo nuevamente.");
+      }
+    } catch (err) {
+      console.error("[Documentos] Error al descargar:", err);
       tab?.close();
+      setDownloadError("Ocurrió un error al descargar el documento. Inténtalo nuevamente.");
+    } finally {
+      setDownloading(false);
     }
   }
 
@@ -84,6 +94,7 @@ export function DocumentosForm() {
       </form>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
+      {downloadError && <p className="text-sm text-destructive">{downloadError}</p>}
 
       {result && (
         <Card className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500">

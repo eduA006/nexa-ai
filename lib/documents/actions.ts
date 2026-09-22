@@ -106,23 +106,27 @@ export async function getDownloadUrl(storagePath: string): Promise<string | null
   const [{ data: asOriginal }, { data: asProcessed }] = await Promise.all([
     supabase
       .from("documents")
-      .select("id")
+      .select("original_filename")
       .eq("user_id", user.id)
       .eq("storage_path", storagePath)
       .maybeSingle(),
     supabase
       .from("documents")
-      .select("id")
+      .select("original_filename")
       .eq("user_id", user.id)
       .eq("processed_storage_path", storagePath)
       .maybeSingle(),
   ]);
 
-  if (!asOriginal && !asProcessed) return null;
+  const owningDoc = asOriginal ?? asProcessed;
+  if (!owningDoc) return null;
 
+  // `download: true` fuerza Content-Disposition: attachment — sin esto,
+  // el navegador intenta mostrar el archivo inline y, como no sabe
+  // renderizar un .docx, la pestaña queda en blanco sin descargar nada.
   const { data, error } = await supabase.storage
     .from(BUCKET)
-    .createSignedUrl(storagePath, 60);
+    .createSignedUrl(storagePath, 60, { download: owningDoc.original_filename });
 
   if (error) return null;
   return data.signedUrl;

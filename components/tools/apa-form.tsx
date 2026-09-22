@@ -24,15 +24,20 @@ export function ApaForm({ documents }: { documents: Document[] }) {
 
   async function handleGenerateCorrected() {
     if (!result) return;
+    // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
+    // luego: si se espera al await antes de window.open(), varios
+    // navegadores lo bloquean por no parecer originado por el usuario.
+    const tab = window.open("", "_blank", "noopener,noreferrer");
     setGenerating(true);
     setGenerateError(null);
     const outcome = await generateCorrectedDocument(result.documentId);
     setGenerating(false);
     if ("error" in outcome) {
       setGenerateError(outcome.error);
+      tab?.close();
       return;
     }
-    window.open(outcome.url, "_blank", "noopener,noreferrer");
+    if (tab) tab.location.href = outcome.url;
   }
 
   return (

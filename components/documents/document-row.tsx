@@ -27,18 +27,31 @@ export function DocumentRow({ doc }: { doc: Document }) {
   const [downloadingCorrected, setDownloadingCorrected] = useState(false);
 
   async function handleDownload() {
+    // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
+    // luego: si se espera al await antes de window.open(), varios
+    // navegadores lo bloquean por no parecer originado por el usuario.
+    const tab = window.open("", "_blank", "noopener,noreferrer");
     setDownloading(true);
     const url = await getDownloadUrl(doc.storage_path);
     setDownloading(false);
-    if (url) window.open(url, "_blank", "noopener,noreferrer");
+    if (url && tab) {
+      tab.location.href = url;
+    } else {
+      tab?.close();
+    }
   }
 
   async function handleDownloadCorrected() {
     if (!doc.processed_storage_path) return;
+    const tab = window.open("", "_blank", "noopener,noreferrer");
     setDownloadingCorrected(true);
     const url = await getDownloadUrl(doc.processed_storage_path);
     setDownloadingCorrected(false);
-    if (url) window.open(url, "_blank", "noopener,noreferrer");
+    if (url && tab) {
+      tab.location.href = url;
+    } else {
+      tab?.close();
+    }
   }
 
   function handleDelete() {

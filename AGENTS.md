@@ -19,7 +19,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Estado de las herramientas de IA (catálogo completo)
 
-Las **18 herramientas** de `components/tools/catalog.ts` (10 estudiante + 8 profesionales) están implementadas y marcadas `available: true`. Detalle completo de cada una, con qué se verificó y por qué, en `PLAN.md` (bitácora en la sección "0. Estado del proyecto") y `docs/AI.md`. Resumen para orientarse rápido:
+Las **19 herramientas** de `components/tools/catalog.ts` (11 estudiante + 8 profesionales, agrupadas por `category`) están implementadas. Detalle completo de cada una, con qué se verificó y por qué, en `PLAN.md` (bitácora en la sección "0. Estado del proyecto") y `docs/AI.md`. Resumen para orientarse rápido:
 
 - **Patrón por herramienta**: `lib/ai/prompts/<tool>.ts` (prompt + schema Zod) → `lib/documents/analyze/<tool>.ts` o `lib/tools/<tool>/actions.ts` directo si no hay documento → `components/tools/<tool>-form.tsx` → `app/(app)/tools/<slug>/page.tsx`. Todas las llamadas a IA pasan por `lib/ai/service.ts` (nunca importar `GeminiProvider`/`GroqProvider` directo).
 - **Con documento subido (DOCX)**: APA, Analizador de escritura, Corrector de redacción, Analizador de CV, Analizador de bibliografía, Analizador de documentos, Resumir, Preparador de exposiciones, Generador de presentaciones → todas restringidas a `.docx` (PDF/XLSX/CSV solo tienen extracción de texto para XLSX/CSV vía `lib/documents/extract/spreadsheet.ts`, no para PDF — `pdf-lib`/`pdfjs-dist` siguen sin instalar).

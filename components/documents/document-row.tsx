@@ -5,7 +5,7 @@ import { Download, Trash2, Loader2, FileCheck2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { deleteDocument } from "@/lib/documents/actions";
-import { fetchDownloadUrl } from "@/lib/documents/client";
+import { fetchDownloadUrl, triggerFileDownload } from "@/lib/documents/client";
 import type { Document } from "@/lib/documents/queries";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -28,21 +28,12 @@ export function DocumentRow({ doc }: { doc: Document }) {
   const [downloadingCorrected, startDownloadCorrected] = useTransition();
 
   function handleDownload() {
-    // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
-    // luego: si se espera al await antes de window.open(), varios
-    // navegadores lo bloquean por no parecer originado por el usuario.
-    const tab = window.open("", "_blank", "noopener,noreferrer");
     startDownload(async () => {
       try {
         const url = await fetchDownloadUrl(doc.storage_path);
-        if (url && tab) {
-          tab.location.href = url;
-        } else {
-          tab?.close();
-        }
+        if (url) triggerFileDownload(url);
       } catch (err) {
         console.error("[Documents] Error al descargar:", err);
-        tab?.close();
       }
     });
   }
@@ -50,18 +41,12 @@ export function DocumentRow({ doc }: { doc: Document }) {
   function handleDownloadCorrected() {
     const processedPath = doc.processed_storage_path;
     if (!processedPath) return;
-    const tab = window.open("", "_blank", "noopener,noreferrer");
     startDownloadCorrected(async () => {
       try {
         const url = await fetchDownloadUrl(processedPath);
-        if (url && tab) {
-          tab.location.href = url;
-        } else {
-          tab?.close();
-        }
+        if (url) triggerFileDownload(url);
       } catch (err) {
         console.error("[Documents] Error al descargar versión corregida:", err);
-        tab?.close();
       }
     });
   }

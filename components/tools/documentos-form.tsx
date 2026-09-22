@@ -3,7 +3,7 @@
 import { useActionState, useState, useTransition } from "react";
 import { Loader2, Download } from "lucide-react";
 import { runGenerarDocumento, type DocumentoActionState } from "@/lib/tools/documentos/actions";
-import { fetchDownloadUrl } from "@/lib/documents/client";
+import { fetchDownloadUrl, triggerFileDownload } from "@/lib/documents/client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,22 +29,16 @@ export function DocumentosForm() {
   function handleDownload() {
     if (!result) return;
     setDownloadError(null);
-    // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
-    // luego: si se espera al await antes de window.open(), varios
-    // navegadores lo bloquean por no parecer originado por el usuario.
-    const tab = window.open("", "_blank", "noopener,noreferrer");
     startDownload(async () => {
       try {
         const url = await fetchDownloadUrl(result.storagePath);
-        if (url && tab) {
-          tab.location.href = url;
+        if (url) {
+          triggerFileDownload(url);
         } else {
-          tab?.close();
           setDownloadError("No se pudo generar el enlace de descarga. Inténtalo nuevamente.");
         }
       } catch (err) {
         console.error("[Documentos] Error al descargar:", err);
-        tab?.close();
         setDownloadError("Ocurrió un error al descargar el documento. Inténtalo nuevamente.");
       }
     });

@@ -25,6 +25,22 @@ function escapeHtml(value: string): string {
 }
 
 /**
+ * Solo permite esquemas http/https en un `href`. El texto de la URL ya
+ * se escapa con `escapeHtml`, pero eso no valida el *esquema* — un valor
+ * como "javascript:alert(1)" pasaría intacto dentro de un href real.
+ * Cualquier otro esquema se neutraliza a "#".
+ */
+function safeHref(url: string): string {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") return url;
+  } catch {
+    // URL inválida: cae al valor neutro de abajo.
+  }
+  return "#";
+}
+
+/**
  * Los autores se ingresan ya en formato "Apellido, A. A." separados por
  * punto y coma (ej. "García, J. M.; Pérez, L."). Aplica las reglas de
  * unión de APA 7: "&" antes del último si hay 2+, y elipsis si hay más
@@ -93,7 +109,7 @@ export function formatWebpageReference(fields: WebpageFields): ReferenceOutput {
 
   return {
     text: `${authorPrefix}(${yearPart}). ${titleWithPeriod}${sitePart} ${url}`.replace(/\s+/g, " ").trim(),
-    html: `${escapeHtml(authorPrefix)}(${escapeHtml(yearPart)}). ${escapeHtml(titleWithPeriod)}${escapeHtml(sitePart)} <a href="${escapeHtml(url)}">${escapeHtml(url)}</a>`
+    html: `${escapeHtml(authorPrefix)}(${escapeHtml(yearPart)}). ${escapeHtml(titleWithPeriod)}${escapeHtml(sitePart)} <a href="${escapeHtml(safeHref(url))}">${escapeHtml(url)}</a>`
       .replace(/\s+/g, " ")
       .trim(),
   };
@@ -183,7 +199,7 @@ export function formatThesisReference(fields: ThesisFields): ReferenceOutput {
     text: `${withPeriod(authors)} (${year}). ${title} ${bracket}.${url ? ` ${url}` : ""}`
       .replace(/\s+/g, " ")
       .trim(),
-    html: `${escapeHtml(withPeriod(authors))} (${escapeHtml(year)}). <em>${escapeHtml(title)}</em> ${escapeHtml(bracket)}.${url ? ` <a href="${escapeHtml(url)}">${escapeHtml(url)}</a>` : ""}`
+    html: `${escapeHtml(withPeriod(authors))} (${escapeHtml(year)}). <em>${escapeHtml(title)}</em> ${escapeHtml(bracket)}.${url ? ` <a href="${escapeHtml(safeHref(url))}">${escapeHtml(url)}</a>` : ""}`
       .replace(/\s+/g, " ")
       .trim(),
   };

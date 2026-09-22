@@ -1,4 +1,111 @@
 import "server-only";
+import { lookup as dnsLookup } from "node:dns/promises";
+import { isIP } from "node:net";
+
+const FETCH_TIMEOUT_MS = 5000;
+const MAX_RESPONSE_BYTES = 2 * 1024 * 1024; // 2 MB, de sobra para <head>
+
+/**
+ * Bloquea rangos privados/loopback/link-local (incluye el endpoint de
+ * metadata de nube 169.254.169.254) para evitar que un usuario use esta
+ * herramienta para hacer que el servidor consulte recursos internos.
+ */
+function isPrivateOrLoopbackIp(ip: string): boolean {
+  const version = isIP(ip);
+  if (version === 4) {
+    const [a, b] = ip.split(".").map(Number);
+    if (a === 127) return true; // loopback
+    if (a === 10) return true; // privado
+    if (a === 172 && b >= 16 && b <= 31) return true; // privado
+    if (a === 192 && b === 168) return true; // privado
+    if (a === 169 && b === 254) return true; // link-local / metadata cloud
+    if (a === 0) return true;
+    return false;
+  }
+  if (version === 6) {
+    const normalized = ip.toLowerCase();
+    if (normalized === "::1") return true; // loopback
+    if (normalized.startsWith("fe80:")) return true; // link-local
+    if (normalized.startsWith("fc") || normalized.startsWith("fd")) return true; // ULA privada
+    return false;
+  }
+  return true; // no se pudo parsear como IP: por seguridad, se rechaza
+}
+
+/**
+ * Valida que una URL provista por el usuario sea segura para que el
+ * servidor la consulte: solo http/https, y el hostname no debe resolver
+ * a una IP privada/loopback/link-local (protege también contra DNS
+ * rebinding, ya que se resuelve y valida la IP real, no solo el string).
+ */
+async function assertSafeExternalUrl(rawUrl: string): Promise<URL> {
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    throw new Error("URL inválida.");
+  }
+
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    throw new Error("Solo se admiten URLs http o https.");
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (hostname === "localhost" || hostname.endsWith(".localhost")) {
+    throw new Error("No se permite consultar direcciones locales.");
+  }
+
+  if (isIP(hostname)) {
+    if (isPrivateOrLoopbackIp(hostname)) {
+      throw new Error("No se permite consultar direcciones privadas.");
+    }
+    return parsed;
+  }
+
+  const resolved = await dnsLookup(hostname, { all: true });
+  if (resolved.length === 0 || resolved.some((r) => isPrivateOrLoopbackIp(r.address))) {
+    throw new Error("No se permite consultar esa dirección.");
+  }
+
+  return parsed;
+}
+
+async function fetchWithGuards(url: string, headers: Record<string, string>): Promise<string> {
+  await assertSafeExternalUrl(url);
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, { headers, signal: controller.signal, redirect: "error" });
+    if (!response.ok) {
+      throw new Error(`El sitio respondió con estado ${response.status}.`);
+    }
+
+    const contentLength = response.headers.get("content-length");
+    if (contentLength && Number(contentLength) > MAX_RESPONSE_BYTES) {
+      throw new Error("La respuesta del sitio es demasiado grande.");
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) return await response.text();
+
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      received += value.byteLength;
+      if (received > MAX_RESPONSE_BYTES) {
+        await reader.cancel();
+        throw new Error("La respuesta del sitio es demasiado grande.");
+      }
+      chunks.push(value);
+    }
+    return Buffer.concat(chunks.map((c) => Buffer.from(c))).toString("utf-8");
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 export type DoiLookupResult = {
   authors: string;
@@ -77,15 +184,9 @@ export type UrlLookupResult = {
  * cuando falla, el usuario completa los campos manualmente.
  */
 export async function lookupUrl(url: string): Promise<UrlLookupResult> {
-  const response = await fetch(url, {
-    headers: { "User-Agent": "Mozilla/5.0 (compatible; NexaAI/1.0)" },
+  const html = await fetchWithGuards(url, {
+    "User-Agent": "Mozilla/5.0 (compatible; NexaAI/1.0)",
   });
-
-  if (!response.ok) {
-    throw new Error(`El sitio respondió con estado ${response.status}.`);
-  }
-
-  const html = await response.text();
 
   const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
   const siteNameMatch = html.match(

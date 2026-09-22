@@ -93,6 +93,33 @@ export async function deleteDocument(documentId: string) {
 
 export async function getDownloadUrl(storagePath: string): Promise<string | null> {
   const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  // Confirma que la ruta pertenece a un documento del usuario (original o
+  // procesado) antes de firmar la URL — no basta con RLS de Storage como
+  // única capa, ver auditoría de seguridad de la Fase 13. Dos consultas
+  // separadas en vez de `.or()` para no interpolar `storagePath` (viene
+  // del cliente) directo en un filtro PostgREST.
+  const [{ data: asOriginal }, { data: asProcessed }] = await Promise.all([
+    supabase
+      .from("documents")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("storage_path", storagePath)
+      .maybeSingle(),
+    supabase
+      .from("documents")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("processed_storage_path", storagePath)
+      .maybeSingle(),
+  ]);
+
+  if (!asOriginal && !asProcessed) return null;
+
   const { data, error } = await supabase.storage
     .from(BUCKET)
     .createSignedUrl(storagePath, 60);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Download, Trash2, Loader2 } from "lucide-react";
+import { Download, Trash2, Loader2, FileCheck2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { deleteDocument, getDownloadUrl } from "@/lib/documents/actions";
@@ -24,11 +24,20 @@ const TYPE_LABEL: Record<string, string> = {
 export function DocumentRow({ doc }: { doc: Document }) {
   const [isDeleting, startDelete] = useTransition();
   const [downloading, setDownloading] = useState(false);
+  const [downloadingCorrected, setDownloadingCorrected] = useState(false);
 
   async function handleDownload() {
     setDownloading(true);
     const url = await getDownloadUrl(doc.storage_path);
     setDownloading(false);
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  async function handleDownloadCorrected() {
+    if (!doc.processed_storage_path) return;
+    setDownloadingCorrected(true);
+    const url = await getDownloadUrl(doc.processed_storage_path);
+    setDownloadingCorrected(false);
     if (url) window.open(url, "_blank", "noopener,noreferrer");
   }
 
@@ -66,6 +75,23 @@ export function DocumentRow({ doc }: { doc: Document }) {
             <Download className="h-4 w-4" />
           )}
         </Button>
+        {doc.processed_storage_path && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            onClick={handleDownloadCorrected}
+            disabled={downloadingCorrected}
+            aria-label="Descargar versión corregida"
+            title="Descargar versión corregida"
+          >
+            {downloadingCorrected ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <FileCheck2 className="h-4 w-4" />
+            )}
+          </Button>
+        )}
         <Button
           type="button"
           variant="ghost"

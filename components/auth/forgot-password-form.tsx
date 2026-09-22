@@ -1,15 +1,14 @@
 "use client";
 
 import { useActionState } from "react";
-import { login, type AuthActionState } from "@/lib/supabase/actions";
+import { requestPasswordReset, type AuthActionState } from "@/lib/supabase/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export function LoginForm({ redirectTo }: { redirectTo?: string }) {
-  const loginWithRedirect = login.bind(null, redirectTo);
+export function ForgotPasswordForm() {
   const [state, action, pending] = useActionState<AuthActionState, FormData>(
-    loginWithRedirect,
+    requestPasswordReset,
     undefined,
   );
 
@@ -29,20 +28,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
-      <div
-        className="flex flex-col gap-2 animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
-        style={{ animationDelay: "120ms", animationFillMode: "backwards" }}
-      >
-        <Label htmlFor="password">Contraseña</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          className="transition-shadow focus-visible:shadow-sm"
-        />
-      </div>
       {state?.error && (
         <p className="text-sm text-destructive animate-in fade-in-0 slide-in-from-top-1">
           {state.error}
@@ -52,9 +37,9 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
         type="submit"
         disabled={pending}
         className="w-full animate-in fade-in-0 slide-in-from-bottom-2 duration-500 transition-transform active:scale-[0.98]"
-        style={{ animationDelay: "190ms", animationFillMode: "backwards" }}
+        style={{ animationDelay: "120ms", animationFillMode: "backwards" }}
       >
-        {pending ? "Ingresando…" : "Iniciar sesión"}
+        {pending ? "Enviando…" : "Enviar enlace de recuperación"}
       </Button>
     </form>
   );

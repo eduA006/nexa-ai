@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Loader2, Download } from "lucide-react";
 import { runGenerarDocumento, type DocumentoActionState } from "@/lib/tools/documentos/actions";
+import { getDownloadUrl } from "@/lib/documents/actions";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,9 +20,18 @@ export function DocumentosForm() {
     runGenerarDocumento,
     undefined,
   );
+  const [downloading, setDownloading] = useState(false);
 
   const result = state && "result" in state ? state.result : null;
   const error = state && "error" in state ? state.error : null;
+
+  async function handleDownload() {
+    if (!result) return;
+    setDownloading(true);
+    const url = await getDownloadUrl(result.storagePath);
+    setDownloading(false);
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -71,12 +81,20 @@ export function DocumentosForm() {
         <Card className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle className="text-base">{result.title}</CardTitle>
-            <a href={result.downloadUrl} target="_blank" rel="noopener noreferrer">
-              <Button type="button" variant="outline" size="sm">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleDownload}
+              disabled={downloading}
+            >
+              {downloading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
                 <Download className="h-4 w-4" />
-                Descargar .docx
-              </Button>
-            </a>
+              )}
+              Descargar .docx
+            </Button>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <p className="text-xs text-muted-foreground">

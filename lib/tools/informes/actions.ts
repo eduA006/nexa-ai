@@ -14,7 +14,7 @@ export type InformeActionResult = {
   aiSummary: string;
   trends: string[];
   notableFindings: string[];
-  downloadUrl: string;
+  storagePath: string;
 };
 
 export type InformeActionState = { error: string } | { result: InformeActionResult } | undefined;
@@ -145,14 +145,6 @@ export async function runGenerarInforme(
     tokens_used: analysis.tokensUsed,
   });
 
-  const { data: signed, error: signError } = await supabase.storage
-    .from(DOCUMENTS_BUCKET)
-    .createSignedUrl(storagePath, 60);
-
-  if (signError || !signed) {
-    return { error: "El informe se guardó, pero no se pudo generar el enlace de descarga. Revísalo en Mis documentos." };
-  }
-
   revalidatePath("/documents");
 
   return {
@@ -162,7 +154,7 @@ export async function runGenerarInforme(
       aiSummary: analysis.aiSummary,
       trends: analysis.trends,
       notableFindings: analysis.notableFindings,
-      downloadUrl: signed.signedUrl,
+      storagePath,
     },
   };
 }

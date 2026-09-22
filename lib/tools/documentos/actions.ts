@@ -15,7 +15,7 @@ function isDocumentoType(value: FormDataEntryValue | null): value is DocumentoTy
 }
 
 
-export type DocumentoActionResult = DocumentoResult & { downloadUrl: string };
+export type DocumentoActionResult = DocumentoResult & { storagePath: string };
 export type DocumentoActionState = { error: string } | { result: DocumentoActionResult } | undefined;
 
 /**
@@ -132,15 +132,7 @@ export async function runGenerarDocumento(
     tokens_used: tokensUsed,
   });
 
-  const { data: signed, error: signError } = await supabase.storage
-    .from(DOCUMENTS_BUCKET)
-    .createSignedUrl(storagePath, 60);
-
-  if (signError || !signed) {
-    return { error: "El documento se guardó, pero no se pudo generar el enlace de descarga. Revísalo en Mis documentos." };
-  }
-
   revalidatePath("/documents");
 
-  return { result: { ...data, downloadUrl: signed.signedUrl } };
+  return { result: { ...data, storagePath } };
 }

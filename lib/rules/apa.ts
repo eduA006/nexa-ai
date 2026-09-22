@@ -1,16 +1,7 @@
 import type { DocxStructure } from "@/lib/documents/extract/docx";
+import type { RuleFinding } from "@/lib/rules/types";
 
-export type RuleSeverity = "error" | "warning" | "info";
-
-export type RuleFinding = {
-  type: string;
-  severity: RuleSeverity;
-  location: string;
-  description: string;
-  recommendation: string;
-  /** Lista completa de párrafos afectados, cuando aplica (ej. interlineado, sangría). */
-  affectedParagraphs?: number[];
-};
+export type { RuleSeverity, RuleFinding } from "@/lib/rules/types";
 
 const EXPECTED_MARGIN_IN = 1;
 const MARGIN_TOLERANCE_IN = 0.03;

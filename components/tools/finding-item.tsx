@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { AlertTriangle, Info, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,13 +15,22 @@ const SEVERITY_CONFIG: Record<
   info: { icon: Info, className: "text-muted-foreground" },
 };
 
-export function FindingItem({ finding }: { finding: RuleFinding }) {
+export function FindingItem({
+  finding,
+  style,
+}: {
+  finding: RuleFinding;
+  style?: CSSProperties;
+}) {
   const [showParagraphs, setShowParagraphs] = useState(false);
   const config = SEVERITY_CONFIG[finding.severity];
   const paragraphs = finding.affectedParagraphs ?? [];
 
   return (
-    <li className="rounded-lg border p-4">
+    <li
+      className="animate-in fade-in-0 slide-in-from-bottom-1 rounded-lg border p-4 duration-300"
+      style={style}
+    >
       <div className="flex items-center gap-2">
         <config.icon className={`h-4 w-4 shrink-0 ${config.className}`} />
         <span className="font-medium">{finding.type}</span>

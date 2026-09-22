@@ -1,6 +1,7 @@
 import "server-only";
 import {
   AIProviderError,
+  fetchWithRetry,
   type AIProvider,
   type GenerateOptions,
   type GenerateResult,
@@ -39,16 +40,18 @@ export class GeminiProvider implements AIProvider {
 
     let response: Response;
     try {
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": this.apiKey,
+      response = await fetchWithRetry(() =>
+        fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-goog-api-key": this.apiKey,
+            },
+            body: JSON.stringify(body),
           },
-          body: JSON.stringify(body),
-        },
+        ),
       );
     } catch (cause) {
       throw new AIProviderError(this.name, "No se pudo conectar con Gemini.", cause);

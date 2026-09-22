@@ -1,12 +1,17 @@
 import "server-only";
 import {
   AIProviderError,
+  fetchWithRetry,
   type AIProvider,
   type GenerateOptions,
   type GenerateResult,
 } from "@/lib/ai/provider";
 
-const DEFAULT_MODEL = "llama-3.3-70b-versatile";
+// llama-3.3-70b-versatile fue retirado de Groq (verificado empíricamente
+// el 2026-09-21 vía GET /openai/v1/models con una API key real: ya no
+// aparece en el listado). gpt-oss-120b es el modelo de propósito general
+// de mayor calidad disponible actualmente.
+const DEFAULT_MODEL = "openai/gpt-oss-120b";
 
 export class GroqProvider implements AIProvider {
   readonly name = "groq";
@@ -34,14 +39,16 @@ export class GroqProvider implements AIProvider {
 
     let response: Response;
     try {
-      response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify(body),
-      });
+      response = await fetchWithRetry(() =>
+        fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.apiKey}`,
+          },
+          body: JSON.stringify(body),
+        }),
+      );
     } catch (cause) {
       throw new AIProviderError(this.name, "No se pudo conectar con Groq.", cause);
     }

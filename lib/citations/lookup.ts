@@ -10,7 +10,7 @@ const MAX_RESPONSE_BYTES = 2 * 1024 * 1024; // 2 MB, de sobra para <head>
  * metadata de nube 169.254.169.254) para evitar que un usuario use esta
  * herramienta para hacer que el servidor consulte recursos internos.
  */
-function isPrivateOrLoopbackIp(ip: string): boolean {
+export function isPrivateOrLoopbackIp(ip: string): boolean {
   const version = isIP(ip);
   if (version === 4) {
     const [a, b] = ip.split(".").map(Number);
@@ -38,7 +38,7 @@ function isPrivateOrLoopbackIp(ip: string): boolean {
  * a una IP privada/loopback/link-local (protege también contra DNS
  * rebinding, ya que se resuelve y valida la IP real, no solo el string).
  */
-async function assertSafeExternalUrl(rawUrl: string): Promise<URL> {
+export async function assertSafeExternalUrl(rawUrl: string): Promise<URL> {
   let parsed: URL;
   try {
     parsed = new URL(rawUrl);

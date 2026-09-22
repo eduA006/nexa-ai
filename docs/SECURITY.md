@@ -26,3 +26,7 @@ Auditoría manual de todo el código (no diff de PR — el repo no tiene remoto 
 ### Aceptado sin cambios (informativo)
 
 - El registro y la recuperación de contraseña no tienen throttling propio además del que aplica Supabase Auth (`over_email_send_rate_limit`, manejado correctamente). Se documenta como aceptable por ahora; revisar si en producción los límites por defecto de Supabase resultan insuficientes.
+
+## Tests (Vitest)
+
+Los tres hallazgos corregidos tienen cobertura de test: `lib/citations/lookup.test.ts` prueba el guard SSRF contra IPs privadas/loopback/metadata de nube y esquemas no-http; `lib/citations/apa-reference.test.ts` prueba que `safeHref()` neutraliza esquemas `javascript:`/no-http. Además se agregó cobertura para toda la lógica de reglas deterministas (`lib/rules/*`) y la validación de archivos por firma de bytes (`lib/documents/validate.ts`), ya que son la superficie de lógica pura más grande del proyecto y no dependían de ninguna verificación automatizada hasta ahora. Ver `docs/DEVELOPMENT.md` para el alcance completo de qué se prueba y qué no (las herramientas con IA real se siguen verificando manualmente).

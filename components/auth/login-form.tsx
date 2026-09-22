@@ -26,7 +26,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           type="email"
           autoComplete="email"
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       <div
@@ -40,7 +39,6 @@ export function LoginForm({ redirectTo }: { redirectTo?: string }) {
           type="password"
           autoComplete="current-password"
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       {state?.error && (

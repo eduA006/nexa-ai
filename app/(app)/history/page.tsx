@@ -60,9 +60,9 @@ export default async function HistoryPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <div className="win98-well h-3 w-full overflow-hidden bg-input">
               <div
-                className={`h-full rounded-full transition-all duration-700 ${usageBarClass(usage.aiRequestsToday, usage.aiRequestsLimit)}`}
+                className={`h-full transition-all duration-700 ${usageBarClass(usage.aiRequestsToday, usage.aiRequestsLimit)}`}
                 style={{
                   width: `${Math.min(100, (usage.aiRequestsToday / Math.max(1, usage.aiRequestsLimit)) * 100)}%`,
                 }}
@@ -80,9 +80,9 @@ export default async function HistoryPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            <div className="win98-well h-3 w-full overflow-hidden bg-input">
               <div
-                className={`h-full rounded-full transition-all duration-700 ${usageBarClass(usage.documentsToday, usage.documentsLimit)}`}
+                className={`h-full transition-all duration-700 ${usageBarClass(usage.documentsToday, usage.documentsLimit)}`}
                 style={{
                   width: `${Math.min(100, (usage.documentsToday / Math.max(1, usage.documentsLimit)) * 100)}%`,
                 }}

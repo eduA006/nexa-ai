@@ -21,10 +21,10 @@ export function RoleForm({ currentRole }: { currentRole: string | null }) {
             type="submit"
             disabled={currentRole === option.value}
             className={cn(
-              "flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors",
+              "win98-btn flex items-center gap-2 px-4 py-2 text-sm font-medium",
               currentRole === option.value
-                ? "border-foreground bg-muted"
-                : "hover:bg-muted",
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary text-secondary-foreground",
             )}
           >
             <option.icon className="h-4 w-4" />

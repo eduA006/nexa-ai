@@ -15,25 +15,24 @@ export default async function DocumentsPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Mis documentos</h1>
         <p className="text-muted-foreground">
-          Sube tus archivos para poder analizarlos con las herramientas de
-          NEXA AI (disponibles en próximas fases).
+          Sube tus archivos para analizarlos con las herramientas de NEXA AI.
         </p>
       </div>
 
       <UploadForm maxSizeMb={LIMITS.MAX_FILE_SIZE_MB} />
 
       {documents.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 rounded-lg border border-dashed py-16 text-center">
+        <div className="win98-well flex flex-1 flex-col items-center justify-center gap-3 bg-input py-16 text-center">
           <FileText className="h-8 w-8 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             Aún no has subido ningún documento.
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border">
+        <div className="win98-well overflow-x-auto bg-input">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b text-left text-muted-foreground">
+              <tr className="border-b border-border text-left text-muted-foreground">
                 <th className="py-2 pr-4 pl-4 font-medium">Nombre</th>
                 <th className="py-2 pr-4 font-medium">Tipo</th>
                 <th className="py-2 pr-4 font-medium">Fecha</th>

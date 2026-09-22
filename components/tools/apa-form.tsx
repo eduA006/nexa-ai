@@ -92,7 +92,7 @@ export function ApaForm({ documents }: { documents: Document[] }) {
             findings={result.formatFindings}
           />
 
-          <div className="flex flex-col gap-2 rounded-lg border p-4 transition-shadow hover:shadow-sm">
+          <div className="win98-panel flex flex-col gap-2 bg-card p-4">
             <p className="text-sm font-medium">Generar DOCX corregido</p>
             <p className="text-sm text-muted-foreground">
               Corrige automáticamente márgenes, interlineado, sangría, fuente y tamaño.

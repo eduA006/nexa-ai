@@ -22,7 +22,7 @@ export function ThemeToggle() {
   );
 
   if (!mounted) {
-    return <div className="h-9 w-64 rounded-md bg-muted" />;
+    return <div className="win98-well h-9 w-64 bg-input" />;
   }
 
   return (
@@ -33,8 +33,10 @@ export function ThemeToggle() {
           type="button"
           onClick={() => setTheme(option.value)}
           className={cn(
-            "flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium transition-colors",
-            theme === option.value ? "border-foreground bg-muted" : "hover:bg-muted",
+            "win98-btn flex items-center gap-2 px-3 py-2 text-sm font-medium",
+            theme === option.value
+              ? "bg-primary text-primary-foreground"
+              : "bg-secondary text-secondary-foreground",
           )}
         >
           <option.icon className="h-4 w-4" />

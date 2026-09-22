@@ -49,16 +49,16 @@ export function FindingSection({
 
   return (
     <div className="flex flex-col gap-3 animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
-      <div className="rounded-lg border bg-muted/30 p-4">
+      <div className="win98-panel bg-card p-4">
         <div className="flex items-center justify-between">
           <p className="text-sm font-medium">{title}</p>
           <span className={`text-sm font-semibold ${scoreColorClass(score)}`}>
             {score}/100
           </span>
         </div>
-        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div className="win98-well mt-2 h-3 w-full overflow-hidden bg-input">
           <div
-            className={`h-full rounded-full transition-all duration-700 ${scoreBarClass(score)}`}
+            className={`h-full transition-all duration-700 ${scoreBarClass(score)}`}
             style={{ width: `${score}%` }}
           />
         </div>

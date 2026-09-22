@@ -71,7 +71,7 @@ export default async function DocumentChatPage({
               className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
               style={{ animationDelay: `${index * 60}ms`, animationFillMode: "backwards" }}
             >
-              <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md">
+              <Card className="h-full hover:bg-muted/50">
                 <CardHeader>
                   <MessagesSquare className="h-5 w-5" />
                   <CardTitle className="mt-2 truncate text-base">{doc.name}</CardTitle>

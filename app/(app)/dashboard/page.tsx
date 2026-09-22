@@ -85,7 +85,7 @@ export default async function DashboardPage() {
         className="grid gap-4 lg:grid-cols-2 animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
         style={{ animationDelay: "220ms", animationFillMode: "backwards" }}
       >
-        <Card className="transition-shadow hover:shadow-md">
+        <Card>
           <CardHeader>
             <FileText className="h-5 w-5" />
             <CardTitle className="mt-2 text-base">
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
           )}
         </Card>
 
-        <Card className="transition-shadow hover:shadow-md">
+        <Card>
           <CardHeader>
             <Clock className="h-5 w-5" />
             <CardTitle className="mt-2 text-base">Actividad reciente</CardTitle>
@@ -157,7 +157,7 @@ export default async function DashboardPage() {
       </div>
 
       <Card
-        className="transition-shadow hover:shadow-md animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+        className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
         style={{ animationDelay: "280ms", animationFillMode: "backwards" }}
       >
         <CardHeader>

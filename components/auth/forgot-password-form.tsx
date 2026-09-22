@@ -25,7 +25,6 @@ export function ForgotPasswordForm() {
           type="email"
           autoComplete="email"
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       {state?.error && (

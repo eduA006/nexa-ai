@@ -24,7 +24,6 @@ export function SignupForm() {
           name="full_name"
           autoComplete="name"
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       <div
@@ -38,7 +37,6 @@ export function SignupForm() {
           type="email"
           autoComplete="email"
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       <div
@@ -53,7 +51,6 @@ export function SignupForm() {
           autoComplete="new-password"
           minLength={6}
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       {state?.error && (

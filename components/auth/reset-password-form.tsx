@@ -26,7 +26,6 @@ export function ResetPasswordForm() {
           autoComplete="new-password"
           minLength={6}
           required
-          className="transition-shadow focus-visible:shadow-sm"
         />
       </div>
       {state?.error && (

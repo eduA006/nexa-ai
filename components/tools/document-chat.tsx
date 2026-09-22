@@ -35,7 +35,7 @@ export function DocumentChat({
 
   return (
     <div className="flex flex-1 flex-col gap-4">
-      <div className="flex min-h-[320px] flex-1 flex-col gap-3 overflow-y-auto rounded-lg border p-4">
+      <div className="win98-well flex min-h-[320px] flex-1 flex-col gap-3 overflow-y-auto bg-input p-4">
         {messages.length === 0 ? (
           <p className="m-auto text-sm text-muted-foreground">
             Escribe una pregunta sobre el contenido de este documento para empezar.
@@ -45,10 +45,10 @@ export function DocumentChat({
             <div
               key={message.id}
               className={cn(
-                "max-w-[85%] animate-in fade-in-0 slide-in-from-bottom-1 rounded-lg px-3 py-2 text-sm duration-300",
+                "win98-panel max-w-[85%] animate-in fade-in-0 slide-in-from-bottom-1 px-3 py-2 text-sm duration-300",
                 message.role === "user"
                   ? "self-end bg-primary text-primary-foreground"
-                  : "self-start bg-muted",
+                  : "self-start bg-secondary",
               )}
             >
               {message.content}
@@ -67,7 +67,7 @@ export function DocumentChat({
           required
           placeholder="Pregunta algo sobre el documento…"
           disabled={pending}
-          className="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-sm transition-shadow focus-visible:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+          className="win98-well h-9 flex-1 border border-input bg-input px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
         />
         <Button type="submit" disabled={pending} size="icon" aria-label="Enviar pregunta">
           {pending ? (

@@ -111,7 +111,7 @@ export function CodigoForm() {
                   {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                 </Button>
               </div>
-              <pre className="overflow-x-auto rounded-md border bg-muted/30 p-3 text-sm">
+              <pre className="win98-well overflow-x-auto bg-input p-3 font-mono text-sm">
                 <code>{result.resultCode}</code>
               </pre>
             </div>

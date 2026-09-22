@@ -96,14 +96,20 @@ export async function getDownloadUrl(storagePath: string): Promise<string | null
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return null;
+  if (!user) {
+    console.error("[getDownloadUrl] Sin usuario autenticado.", { storagePath });
+    return null;
+  }
 
   // Confirma que la ruta pertenece a un documento del usuario (original o
   // procesado) antes de firmar la URL — no basta con RLS de Storage como
   // única capa, ver auditoría de seguridad de la Fase 13. Dos consultas
   // separadas en vez de `.or()` para no interpolar `storagePath` (viene
   // del cliente) directo en un filtro PostgREST.
-  const [{ data: asOriginal }, { data: asProcessed }] = await Promise.all([
+  const [
+    { data: asOriginal, error: originalError },
+    { data: asProcessed, error: processedError },
+  ] = await Promise.all([
     supabase
       .from("documents")
       .select("original_filename")
@@ -119,7 +125,15 @@ export async function getDownloadUrl(storagePath: string): Promise<string | null
   ]);
 
   const owningDoc = asOriginal ?? asProcessed;
-  if (!owningDoc) return null;
+  if (!owningDoc) {
+    console.error("[getDownloadUrl] No se encontró un documento del usuario con ese storagePath.", {
+      userId: user.id,
+      storagePath,
+      originalError,
+      processedError,
+    });
+    return null;
+  }
 
   // `download: true` fuerza Content-Disposition: attachment — sin esto,
   // el navegador intenta mostrar el archivo inline y, como no sabe
@@ -128,6 +142,9 @@ export async function getDownloadUrl(storagePath: string): Promise<string | null
     .from(BUCKET)
     .createSignedUrl(storagePath, 60, { download: owningDoc.original_filename });
 
-  if (error) return null;
+  if (error) {
+    console.error("[getDownloadUrl] createSignedUrl falló.", { storagePath, error });
+    return null;
+  }
   return data.signedUrl;
 }

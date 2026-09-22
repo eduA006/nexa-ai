@@ -1,18 +1,12 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { generateStructured } from "@/lib/ai/service";
 import { reunionResultSchema, buildReunionPrompt, type ReunionResult } from "@/lib/ai/prompts/reuniones";
 
 export type ReunionActionState = { error: string } | { result: ReunionResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 /**
  * Sin documento subido, igual que Correos/Programación/Generador de CV —

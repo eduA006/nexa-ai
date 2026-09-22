@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { analyzeApaDocument } from "@/lib/documents/analyze/apa";
 import { applyDocxFormatFixes } from "@/lib/documents/generate/docx-corrections";
 import type { RuleFinding } from "@/lib/rules/apa";
@@ -20,12 +20,6 @@ export type ApaResult = {
 
 export type ApaActionState = { error: string } | { result: ApaResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function runApaAnalysis(
   _prevState: ApaActionState,

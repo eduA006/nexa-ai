@@ -20,3 +20,11 @@ export const LIMITS = {
 } as const;
 
 export type Limits = typeof LIMITS;
+
+/** Inicio del día actual en UTC, como ISO string — límite de "por día" en toda la app. */
+export function startOfTodayIso(): string {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  ).toISOString();
+}

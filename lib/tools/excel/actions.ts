@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { analyzeSpreadsheet } from "@/lib/documents/analyze/excel";
 import type { ColumnStat } from "@/lib/documents/extract/spreadsheet";
 
@@ -17,12 +17,6 @@ export type ExcelResult = {
 
 export type ExcelActionState = { error: string } | { result: ExcelResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function runExcelAnalysis(
   _prevState: ExcelActionState,

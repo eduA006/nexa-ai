@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { analyzeExposicionDocument } from "@/lib/documents/analyze/exposiciones";
 import type { ExposicionResult } from "@/lib/ai/prompts/exposiciones";
 
@@ -12,12 +12,6 @@ export type ExposicionActionState =
   | { result: ExposicionActionResult }
   | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function runExposicionAnalysis(
   _prevState: ExposicionActionState,

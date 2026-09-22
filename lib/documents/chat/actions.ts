@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import mammoth from "mammoth";
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { generateText } from "@/lib/ai/service";
 import {
   buildDocumentChatPrompt,
@@ -14,12 +14,6 @@ import type { ChatMessage } from "@/lib/documents/chat/queries";
 
 export type ChatActionState = { error: string } | { messages: ChatMessage[] } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function sendChatMessage(
   documentId: string,

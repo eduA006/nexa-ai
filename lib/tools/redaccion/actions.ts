@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { analyzeRedaccionDocument } from "@/lib/documents/analyze/redaccion";
 import type { RuleFinding } from "@/lib/rules/types";
 
@@ -16,12 +16,6 @@ export type RedaccionResult = {
 
 export type RedaccionActionState = { error: string } | { result: RedaccionResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function runRedaccionAnalysis(
   _prevState: RedaccionActionState,

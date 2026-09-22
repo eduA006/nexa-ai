@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { generateStructured } from "@/lib/ai/service";
 import { correoResultSchema, buildCorreoPrompt, type CorreoAction, type CorreoResult } from "@/lib/ai/prompts/correos";
 
@@ -13,12 +13,6 @@ function isCorreoAction(value: FormDataEntryValue | null): value is CorreoAction
 
 export type CorreoActionState = { error: string } | { result: CorreoResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 /**
  * Sin documento subido, igual que el Ayudante de programación — el

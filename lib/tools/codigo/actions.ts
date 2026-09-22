@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { generateStructured } from "@/lib/ai/service";
 import { codigoResultSchema, buildCodigoPrompt, type CodigoAction, type CodigoResult } from "@/lib/ai/prompts/codigo";
 
@@ -13,12 +13,6 @@ function isCodigoAction(value: FormDataEntryValue | null): value is CodigoAction
 
 export type CodigoActionState = { error: string } | { result: CodigoResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 /**
  * A diferencia del resto de herramientas de la Fase 10, esta no procesa

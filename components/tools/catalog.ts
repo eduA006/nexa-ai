@@ -56,3 +56,12 @@ export const RECOMMENDED_TOOLS: Record<string, ToolCatalogItem[]> = {
   student: STUDENT_TOOLS.slice(0, 3),
   professional: PROFESSIONAL_TOOLS.slice(0, 3),
 };
+
+export const ALL_TOOLS: ToolCatalogItem[] = [...STUDENT_TOOLS, ...PROFESSIONAL_TOOLS];
+
+const TOOLS_BY_SLUG = new Map(ALL_TOOLS.map((tool) => [tool.slug, tool]));
+
+/** Busca una herramienta del catálogo por slug (ej. el valor `tool` de `ai_sessions`). */
+export function getToolBySlug(slug: string): ToolCatalogItem | undefined {
+  return TOOLS_BY_SLUG.get(slug);
+}

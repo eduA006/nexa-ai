@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { analyzeCvDocument } from "@/lib/documents/analyze/cv";
 import type { RuleFinding } from "@/lib/rules/types";
 
@@ -16,12 +16,6 @@ export type CvResult = {
 
 export type CvActionState = { error: string } | { result: CvResult } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function runCvAnalysis(
   _prevState: CvActionState,

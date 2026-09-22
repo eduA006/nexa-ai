@@ -4,16 +4,11 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { validateFile } from "@/lib/documents/validate";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 
 const BUCKET = "documents";
 
 export type UploadActionState = { error: string } | undefined;
-
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())).toISOString();
-}
 
 export async function uploadDocument(
   _prevState: UploadActionState,

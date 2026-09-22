@@ -1,18 +1,12 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { generateStructured } from "@/lib/ai/service";
 import { generatedCvSchema, buildGeneradorCvPrompt, type GeneratedCv } from "@/lib/ai/prompts/generador-cv";
 
 export type GeneradorCvActionState = { error: string } | { result: GeneratedCv } | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 function str(formData: FormData, key: string): string {
   const value = formData.get(key);

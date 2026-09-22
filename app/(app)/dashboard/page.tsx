@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { FileText, Clock, Wrench, Sparkles } from "lucide-react";
+import { FileText, Clock, Wrench } from "lucide-react";
 import { getCurrentUser } from "@/lib/dal";
 import { getUserDocuments } from "@/lib/documents/queries";
+import { getRecentAiSessions, getToolUsageCounts } from "@/lib/usage/queries";
 import {
   Card,
   CardContent,
@@ -10,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { RECOMMENDED_TOOLS } from "@/components/tools/catalog";
+import { RECOMMENDED_TOOLS, getToolBySlug } from "@/components/tools/catalog";
 
 const TYPE_LABEL: Record<string, string> = {
   pdf: "PDF",
@@ -31,7 +32,12 @@ export default async function DashboardPage() {
   const profile = session?.profile;
   const displayName = greetingName(profile?.full_name, session?.user.email);
   const recommended = RECOMMENDED_TOOLS[profile?.role ?? "student"];
-  const recentDocuments = (await getUserDocuments()).slice(0, 3);
+  const [recentDocuments, recentSessions, toolCounts] = await Promise.all([
+    getUserDocuments().then((docs) => docs.slice(0, 3)),
+    getRecentAiSessions(4),
+    getToolUsageCounts(),
+  ]);
+  const topTools = toolCounts.slice(0, 3);
 
   return (
     <div className="flex flex-1 flex-col gap-8 px-6 py-8 md:px-10">
@@ -136,11 +142,34 @@ export default async function DashboardPage() {
           <CardHeader>
             <Clock className="h-5 w-5" />
             <CardTitle className="mt-2 text-base">Actividad reciente</CardTitle>
-            <CardDescription>
-              Aquí verás el historial de tus análisis y documentos generados
-              cuando esta función esté disponible.
-            </CardDescription>
+            {recentSessions.length === 0 && (
+              <CardDescription>
+                Aquí verás el historial de tus análisis y documentos generados
+                cuando uses una herramienta de IA.
+              </CardDescription>
+            )}
           </CardHeader>
+          {recentSessions.length > 0 && (
+            <CardContent className="flex flex-col gap-2">
+              {recentSessions.map((session) => {
+                const info = getToolBySlug(session.tool);
+                return (
+                  <div key={session.id} className="flex items-center justify-between text-sm">
+                    <span className="truncate">{info?.name ?? session.tool}</span>
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      {new Date(session.created_at).toLocaleDateString("es-PE")}
+                    </span>
+                  </div>
+                );
+              })}
+              <Link
+                href="/history"
+                className="mt-1 text-sm text-muted-foreground underline underline-offset-4"
+              >
+                Ver historial completo
+              </Link>
+            </CardContent>
+          )}
         </Card>
       </div>
 
@@ -153,26 +182,26 @@ export default async function DashboardPage() {
           <CardTitle className="mt-2 text-base">
             Herramientas más utilizadas
           </CardTitle>
-          <CardDescription>
-            Se mostrarán aquí una vez que empieces a usar herramientas de IA.
-          </CardDescription>
+          {topTools.length === 0 && (
+            <CardDescription>
+              Se mostrarán aquí una vez que empieces a usar herramientas de IA.
+            </CardDescription>
+          )}
         </CardHeader>
-      </Card>
-
-      <Card
-        className="border-dashed animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
-        style={{ animationDelay: "340ms", animationFillMode: "backwards" }}
-      >
-        <CardHeader className="items-center text-center">
-          <Sparkles className="h-5 w-5" />
-          <CardTitle className="mt-2 text-base">
-            El dashboard sigue en construcción
-          </CardTitle>
-          <CardDescription>
-            Estas secciones se irán activando a medida que se completen las
-            fases del proyecto (ver PLAN.md).
-          </CardDescription>
-        </CardHeader>
+        {topTools.length > 0 && (
+          <CardContent className="flex flex-wrap gap-2">
+            {topTools.map(({ tool, count }) => {
+              const info = getToolBySlug(tool);
+              return (
+                <Badge key={tool} variant="secondary" className="gap-1.5 py-1.5">
+                  {info?.icon ? <info.icon className="h-3.5 w-3.5" /> : null}
+                  {info?.name ?? tool}
+                  <span className="text-muted-foreground">· {count}</span>
+                </Badge>
+              );
+            })}
+          </CardContent>
+        )}
       </Card>
     </div>
   );

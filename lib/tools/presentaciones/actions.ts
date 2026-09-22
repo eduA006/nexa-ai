@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { LIMITS } from "@/lib/config/limits";
+import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
 import { analyzePresentationDocument } from "@/lib/documents/analyze/presentaciones";
 import type { PresentationResult } from "@/lib/ai/prompts/presentaciones";
 
@@ -12,12 +12,6 @@ export type PresentationActionState =
   | { result: PresentationActionResult }
   | undefined;
 
-function startOfTodayIso(): string {
-  const now = new Date();
-  return new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
-  ).toISOString();
-}
 
 export async function runPresentationGeneration(
   _prevState: PresentationActionState,

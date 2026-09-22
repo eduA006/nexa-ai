@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { InformesForm } from "@/components/tools/informes-form";
+
+export const metadata: Metadata = { title: "Generador de informes" };
 
 export default async function InformesToolPage() {
   const documents = await getUserDocuments();

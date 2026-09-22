@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { ApaForm } from "@/components/tools/apa-form";
+
+export const metadata: Metadata = { title: "Corrector APA 7" };
 
 export default async function ApaToolPage() {
   const documents = await getUserDocuments();

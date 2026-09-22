@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { KeyRound } from "lucide-react";
 import {
@@ -9,6 +10,8 @@ import {
 } from "@/components/ui/card";
 import { RetroWindow } from "@/components/retro/title-bar";
 import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
+
+export const metadata: Metadata = { title: "Recuperar contraseña" };
 
 export default function ForgotPasswordPage() {
   return (

@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { CvForm } from "@/components/tools/cv-form";
+
+export const metadata: Metadata = { title: "Analizador de CV" };
 
 export default async function CvToolPage() {
   const documents = await getUserDocuments();

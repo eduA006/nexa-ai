@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MessagesSquare } from "lucide-react";
@@ -5,6 +6,8 @@ import { getUserDocuments } from "@/lib/documents/queries";
 import { getChatMessages } from "@/lib/documents/chat/queries";
 import { DocumentChat } from "@/components/tools/document-chat";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+
+export const metadata: Metadata = { title: "Chat con documento" };
 
 export default async function DocumentChatPage({
   searchParams,

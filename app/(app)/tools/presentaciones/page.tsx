@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { PresentacionesForm } from "@/components/tools/presentaciones-form";
+
+export const metadata: Metadata = { title: "Generador de presentaciones" };
 
 export default async function PresentacionesToolPage() {
   const documents = await getUserDocuments();

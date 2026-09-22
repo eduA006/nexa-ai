@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { History, Sparkles, FileText } from "lucide-react";
 import {
   getRecentAiSessions,
@@ -13,6 +14,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
+export const metadata: Metadata = { title: "Historial" };
 
 const PROVIDER_LABEL: Record<string, string> = {
   gemini: "Gemini",

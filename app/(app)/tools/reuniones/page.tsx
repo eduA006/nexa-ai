@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { ReunionesForm } from "@/components/tools/reuniones-form";
+
+export const metadata: Metadata = { title: "Resumen de reuniones" };
 
 export default function ReunionesToolPage() {
   return (

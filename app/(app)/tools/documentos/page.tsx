@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { DocumentosForm } from "@/components/tools/documentos-form";
+
+export const metadata: Metadata = { title: "Generador de documentos" };
 
 export default function DocumentosToolPage() {
   return (

@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { SummarizeForm } from "@/components/tools/summarize-form";
+
+export const metadata: Metadata = { title: "Resumir documento" };
 
 export default async function SummarizeToolPage() {
   const documents = await getUserDocuments();

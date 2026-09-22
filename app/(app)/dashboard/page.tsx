@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { FileText, Clock, Wrench } from "lucide-react";
 import { getCurrentUser } from "@/lib/dal";
@@ -12,6 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RECOMMENDED_TOOLS, getToolBySlug } from "@/components/tools/catalog";
+
+export const metadata: Metadata = { title: "Panel" };
 
 const TYPE_LABEL: Record<string, string> = {
   pdf: "PDF",
@@ -56,45 +59,25 @@ export default async function DashboardPage() {
           Herramientas recomendadas
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {recommended.map((tool, index) =>
-            tool.available ? (
-              <Link
-                key={tool.slug}
-                href={`/tools/${tool.slug}`}
-                className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
-                style={{
-                  animationDelay: `${140 + index * 60}ms`,
-                  animationFillMode: "backwards",
-                }}
-              >
-                <Card className="h-full transition-all duration-200 hover:-translate-y-1 hover:border-foreground/20 hover:bg-muted/50 hover:shadow-md">
-                  <CardHeader>
-                    <tool.icon className="h-5 w-5" />
-                    <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
-                    <CardDescription>{tool.description}</CardDescription>
-                  </CardHeader>
-                </Card>
-              </Link>
-            ) : (
-              <Card
-                key={tool.slug}
-                className="animate-in fade-in-0 slide-in-from-bottom-2 opacity-80 duration-500"
-                style={{
-                  animationDelay: `${140 + index * 60}ms`,
-                  animationFillMode: "backwards",
-                }}
-              >
+          {recommended.map((tool, index) => (
+            <Link
+              key={tool.slug}
+              href={`/tools/${tool.slug}`}
+              className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500"
+              style={{
+                animationDelay: `${140 + index * 60}ms`,
+                animationFillMode: "backwards",
+              }}
+            >
+              <Card className="h-full hover:bg-muted/50">
                 <CardHeader>
                   <tool.icon className="h-5 w-5" />
                   <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
                   <CardDescription>{tool.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Badge variant="secondary">Próximamente</Badge>
-                </CardContent>
               </Card>
-            ),
-          )}
+            </Link>
+          ))}
         </div>
       </section>
 

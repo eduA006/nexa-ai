@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { CorreosForm } from "@/components/tools/correos-form";
+
+export const metadata: Metadata = { title: "Asistente de correos" };
 
 export default function CorreosToolPage() {
   return (

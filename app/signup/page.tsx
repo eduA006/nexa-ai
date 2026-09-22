@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,6 +11,8 @@ import {
 } from "@/components/ui/card";
 import { RetroWindow } from "@/components/retro/title-bar";
 import { SignupForm } from "@/components/auth/signup-form";
+
+export const metadata: Metadata = { title: "Crear cuenta" };
 
 export default function SignupPage() {
   return (

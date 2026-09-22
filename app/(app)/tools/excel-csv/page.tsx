@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { ExcelForm } from "@/components/tools/excel-form";
+
+export const metadata: Metadata = { title: "Analizador de Excel/CSV" };
 
 export default async function ExcelToolPage() {
   const documents = await getUserDocuments();

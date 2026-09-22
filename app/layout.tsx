@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NEXA AI",
+  title: { default: "NEXA AI", template: "%s · NEXA AI" },
   description: "Una plataforma inteligente para estudiar, crear y trabajar.",
 };
 

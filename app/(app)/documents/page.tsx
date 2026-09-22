@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { FileText } from "lucide-react";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { LIMITS } from "@/lib/config/limits";
 import { UploadForm } from "@/components/documents/upload-form";
 import { DocumentRow } from "@/components/documents/document-row";
+
+export const metadata: Metadata = { title: "Mis documentos" };
 
 export default async function DocumentsPage() {
   const documents = await getUserDocuments();

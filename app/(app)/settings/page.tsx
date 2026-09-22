@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RoleForm } from "@/components/settings/role-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
+
+export const metadata: Metadata = { title: "Configuración" };
 
 export default async function SettingsPage() {
   const session = await getCurrentUser();

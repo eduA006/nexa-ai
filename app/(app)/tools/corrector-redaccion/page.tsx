@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { RedaccionForm } from "@/components/tools/redaccion-form";
+
+export const metadata: Metadata = { title: "Corrector de redacción" };
 
 export default async function RedaccionToolPage() {
   const documents = await getUserDocuments();

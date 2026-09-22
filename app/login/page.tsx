@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Sparkles } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,6 +11,8 @@ import {
 } from "@/components/ui/card";
 import { RetroWindow } from "@/components/retro/title-bar";
 import { LoginForm } from "@/components/auth/login-form";
+
+export const metadata: Metadata = { title: "Inicio de sesión" };
 
 export default async function LoginPage({
   searchParams,

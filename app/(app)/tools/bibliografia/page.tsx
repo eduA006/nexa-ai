@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { BibliografiaForm } from "@/components/tools/bibliografia-form";
+
+export const metadata: Metadata = { title: "Analizador de bibliografía" };
 
 export default async function BibliografiaToolPage() {
   const documents = await getUserDocuments();

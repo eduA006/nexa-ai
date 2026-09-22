@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { MailCheck } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RetroWindow } from "@/components/retro/title-bar";
+
+export const metadata: Metadata = { title: "Revisa tu correo" };
 
 export default function CheckEmailForResetPage() {
   return (

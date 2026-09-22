@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { AnalizadorDocumentosForm } from "@/components/tools/analizador-documentos-form";
+
+export const metadata: Metadata = { title: "Analizador de documentos" };
 
 export default async function AnalizadorDocumentosToolPage() {
   const documents = await getUserDocuments();

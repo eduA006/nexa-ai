@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { ReferenciasApaForm } from "@/components/tools/referencias-apa-form";
+
+export const metadata: Metadata = { title: "Generador de referencias APA" };
 
 export default function ReferenciasApaToolPage() {
   return (

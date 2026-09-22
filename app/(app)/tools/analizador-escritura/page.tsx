@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { WritingForm } from "@/components/tools/writing-form";
+
+export const metadata: Metadata = { title: "Analizador de escritura" };
 
 export default async function WritingToolPage() {
   const documents = await getUserDocuments();

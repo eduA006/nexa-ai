@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { GeneradorCvForm } from "@/components/tools/generador-cv-form";
+
+export const metadata: Metadata = { title: "Generador de CV" };
 
 export default function GeneradorCvToolPage() {
   return (

@@ -1,7 +1,10 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { GraduationCap, Briefcase, Sparkles } from "lucide-react";
 import { getCurrentUser } from "@/lib/dal";
 import { setRole } from "@/lib/profile/actions";
+
+export const metadata: Metadata = { title: "Onboarding" };
 
 export default async function OnboardingPage() {
   const session = await getCurrentUser();

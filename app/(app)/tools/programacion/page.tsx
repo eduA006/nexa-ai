@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { CodigoForm } from "@/components/tools/codigo-form";
+
+export const metadata: Metadata = { title: "Ayudante de programación" };
 
 export default function ProgramacionToolPage() {
   return (

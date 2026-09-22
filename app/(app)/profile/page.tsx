@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NameForm } from "@/components/profile/name-form";
+
+export const metadata: Metadata = { title: "Perfil" };
 
 const ROLE_LABEL: Record<string, string> = {
   student: "Estudiante",

@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { ExposicionesForm } from "@/components/tools/exposiciones-form";
+
+export const metadata: Metadata = { title: "Preparador de exposiciones" };
 
 export default async function ExposicionesToolPage() {
   const documents = await getUserDocuments();

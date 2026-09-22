@@ -14,78 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      profiles: {
-        Row: {
-          avatar_url: string | null
-          created_at: string
-          email: string
-          full_name: string | null
-          id: string
-          role: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          email: string
-          full_name?: string | null
-          id?: string
-          role?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          avatar_url?: string | null
-          created_at?: string
-          email?: string
-          full_name?: string | null
-          id?: string
-          role?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      documents: {
-        Row: {
-          created_at: string
-          file_type: string
-          id: string
-          name: string
-          original_filename: string
-          processed_storage_path: string | null
-          status: string
-          storage_path: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          file_type: string
-          id?: string
-          name: string
-          original_filename: string
-          processed_storage_path?: string | null
-          status?: string
-          storage_path: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          file_type?: string
-          id?: string
-          name?: string
-          original_filename?: string
-          processed_storage_path?: string | null
-          status?: string
-          storage_path?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       ai_sessions: {
         Row: {
           created_at: string
@@ -148,6 +76,121 @@ export type Database = {
           id?: string
           result?: Json
           score?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_analyses_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_chat_messages: {
+        Row: {
+          content: string
+          created_at: string
+          document_id: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          document_id: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          document_id?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_chat_messages_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          file_type: string
+          id: string
+          name: string
+          original_filename: string
+          processed_storage_path: string | null
+          status: string
+          storage_path: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          file_type: string
+          id?: string
+          name: string
+          original_filename: string
+          processed_storage_path?: string | null
+          status?: string
+          storage_path: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          file_type?: string
+          id?: string
+          name?: string
+          original_filename?: string
+          processed_storage_path?: string | null
+          status?: string
+          storage_path?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          role: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          role?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

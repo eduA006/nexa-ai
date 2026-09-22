@@ -4,7 +4,8 @@ import { useTransition } from "react";
 import { Download, Trash2, Loader2, FileCheck2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { deleteDocument, getDownloadUrl } from "@/lib/documents/actions";
+import { deleteDocument } from "@/lib/documents/actions";
+import { fetchDownloadUrl } from "@/lib/documents/client";
 import type { Document } from "@/lib/documents/queries";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -26,9 +27,6 @@ export function DocumentRow({ doc }: { doc: Document }) {
   const [downloading, startDownload] = useTransition();
   const [downloadingCorrected, startDownloadCorrected] = useTransition();
 
-  // Un Server Action invocado directo (sin <form> ni startTransition) desde
-  // un event handler no se despacha correctamente en esta versión de
-  // Next.js — ver node_modules/next/dist/docs/01-app/02-guides/server-actions.md.
   function handleDownload() {
     // Abre la pestaña de inmediato (dentro del gesto de clic) y la navega
     // luego: si se espera al await antes de window.open(), varios
@@ -36,7 +34,7 @@ export function DocumentRow({ doc }: { doc: Document }) {
     const tab = window.open("", "_blank", "noopener,noreferrer");
     startDownload(async () => {
       try {
-        const url = await getDownloadUrl(doc.storage_path);
+        const url = await fetchDownloadUrl(doc.storage_path);
         if (url && tab) {
           tab.location.href = url;
         } else {
@@ -55,7 +53,7 @@ export function DocumentRow({ doc }: { doc: Document }) {
     const tab = window.open("", "_blank", "noopener,noreferrer");
     startDownloadCorrected(async () => {
       try {
-        const url = await getDownloadUrl(processedPath);
+        const url = await fetchDownloadUrl(processedPath);
         if (url && tab) {
           tab.location.href = url;
         } else {

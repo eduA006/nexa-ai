@@ -3,7 +3,7 @@
 import { useActionState, useState, useTransition } from "react";
 import { Loader2, Download } from "lucide-react";
 import { runGenerarDocumento, type DocumentoActionState } from "@/lib/tools/documentos/actions";
-import { getDownloadUrl } from "@/lib/documents/actions";
+import { fetchDownloadUrl } from "@/lib/documents/client";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,13 +33,9 @@ export function DocumentosForm() {
     // luego: si se espera al await antes de window.open(), varios
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
-    // Un Server Action invocado directo (sin <form> ni startTransition)
-    // desde un event handler no se despacha correctamente en esta
-    // versión de Next.js — ver node_modules/next/dist/docs/01-app/
-    // 02-guides/server-actions.md.
     startDownload(async () => {
       try {
-        const url = await getDownloadUrl(result.storagePath);
+        const url = await fetchDownloadUrl(result.storagePath);
         if (url && tab) {
           tab.location.href = url;
         } else {

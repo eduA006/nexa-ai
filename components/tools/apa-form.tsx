@@ -2,11 +2,8 @@
 
 import { useActionState, useState, useTransition } from "react";
 import { Download, Loader2 } from "lucide-react";
-import {
-  runApaAnalysis,
-  generateCorrectedDocument,
-  type ApaActionState,
-} from "@/lib/tools/apa/actions";
+import { runApaAnalysis, type ApaActionState } from "@/lib/tools/apa/actions";
+import { generateCorrectedDocument } from "@/lib/tools/apa/client";
 import { Button } from "@/components/ui/button";
 import { FindingSection } from "@/components/tools/finding-section";
 import type { Document } from "@/lib/documents/queries";
@@ -29,10 +26,6 @@ export function ApaForm({ documents }: { documents: Document[] }) {
     // navegadores lo bloquean por no parecer originado por el usuario.
     const tab = window.open("", "_blank", "noopener,noreferrer");
     setGenerateError(null);
-    // Un Server Action invocado directo (sin <form> ni startTransition)
-    // desde un event handler no se despacha correctamente en esta
-    // versión de Next.js — ver node_modules/next/dist/docs/01-app/
-    // 02-guides/server-actions.md.
     startGenerate(async () => {
       try {
         const outcome = await generateCorrectedDocument(result.documentId);

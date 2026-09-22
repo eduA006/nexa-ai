@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { Loader2, Copy, Check } from "lucide-react";
+import { useActionState, useState, useTransition } from "react";
+import { Loader2, Copy, Check, Download } from "lucide-react";
 import { runGeneradorCv, type GeneradorCvActionState } from "@/lib/tools/generador-cv/actions";
+import { fetchDownloadUrl, triggerFileDownload } from "@/lib/documents/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,6 +44,8 @@ export function GeneradorCvForm() {
     undefined,
   );
   const [copied, setCopied] = useState(false);
+  const [downloading, startDownload] = useTransition();
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const result = state && "result" in state ? state.result : null;
   const error = state && "error" in state ? state.error : null;
@@ -52,6 +55,24 @@ export function GeneradorCvForm() {
     await navigator.clipboard.writeText(cvAsText(result));
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
+  }
+
+  function handleDownload() {
+    if (!result) return;
+    setDownloadError(null);
+    startDownload(async () => {
+      try {
+        const url = await fetchDownloadUrl(result.storagePath);
+        if (url) {
+          triggerFileDownload(url);
+        } else {
+          setDownloadError("No se pudo generar el enlace de descarga. Inténtalo nuevamente.");
+        }
+      } catch (err) {
+        console.error("[GeneradorCv] Error al descargar:", err);
+        setDownloadError("Ocurrió un error al descargar el CV. Inténtalo nuevamente.");
+      }
+    });
   }
 
   return (
@@ -131,14 +152,31 @@ export function GeneradorCvForm() {
       </form>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
+      {downloadError && <p className="text-sm text-destructive">{downloadError}</p>}
 
       {result && (
         <Card className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
           <CardHeader className="flex-row items-center justify-between space-y-0">
             <CardTitle className="text-base">CV generado</CardTitle>
-            <Button type="button" variant="ghost" size="icon-sm" onClick={handleCopy} aria-label="Copiar CV">
-              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                {downloading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4" />
+                )}
+                Descargar .docx
+              </Button>
+              <Button type="button" variant="ghost" size="icon-sm" onClick={handleCopy} aria-label="Copiar CV">
+                {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div>

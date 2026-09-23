@@ -17,6 +17,7 @@ import {
   ClipboardList,
   Users,
   Layers,
+  ClipboardCheck,
   type LucideIcon,
 } from "lucide-react";
 
@@ -39,6 +40,7 @@ export const STUDENT_TOOLS: ToolCatalogItem[] = [
   { slug: "exposiciones", name: "Preparador de exposiciones", description: "Estructura, guion y posibles preguntas.", icon: Presentation, category: "Exposiciones" },
   { slug: "presentaciones", name: "Generador de presentaciones", description: "Estructura de diapositivas a partir de un documento.", icon: LayoutPanelTop, category: "Exposiciones" },
   { slug: "flashcards", name: "Flashcards", description: "Tarjetas de pregunta y respuesta para practicar recuerdo activo.", icon: Layers, category: "Estudio" },
+  { slug: "examen", name: "Simulador de exámenes", description: "Genera un examen de práctica y recibe retroalimentación al calificarlo.", icon: ClipboardCheck, category: "Estudio" },
   { slug: "programacion", name: "Ayudante de programación", description: "Explica, corrige, mejora y documenta código.", icon: Code2, category: "Programación" },
 ];
 

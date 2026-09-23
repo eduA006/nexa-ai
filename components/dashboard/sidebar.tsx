@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Sparkles, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { NavLinks } from "@/components/dashboard/nav-links";
 import { UserMenu } from "@/components/dashboard/user-menu";
 import { ThemeModeToggle } from "@/components/theme-mode-toggle";
+import { Logo } from "@/components/logo";
 import { isAdminEmail } from "@/lib/config/admin";
 import type { Profile } from "@/lib/dal";
 
@@ -17,7 +18,7 @@ export function Sidebar({
     <div className="flex h-full flex-col bg-secondary">
       <div className="win98-well m-1.5 mb-1 flex items-center justify-between gap-2 bg-input px-2 py-1.5 text-sm font-bold">
         <div className="flex min-w-0 items-center gap-2">
-          <Sparkles className="h-4 w-4 shrink-0" />
+          <Logo className="h-4 w-4" />
           <Link href="/dashboard" className="truncate">
             NEXA AI
           </Link>

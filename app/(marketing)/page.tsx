@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeModeToggle } from "@/components/theme-mode-toggle";
+import { Logo } from "@/components/logo";
 
 const studentTools = [
   "Corrector APA 7",
@@ -67,7 +68,7 @@ export default function LandingPage() {
       <header className="win98-titlebar sticky top-0 z-10">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-1.5">
           <div className="flex items-center gap-2 text-sm font-bold">
-            <Sparkles className="h-4 w-4" />
+            <Logo className="h-4 w-4" />
             NEXA AI
           </div>
           <nav className="hidden items-center gap-6 text-sm text-white/90 sm:flex">

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { GraduationCap, Briefcase, Sparkles } from "lucide-react";
+import { GraduationCap, Briefcase } from "lucide-react";
 import { getCurrentUser } from "@/lib/dal";
 import { setRole } from "@/lib/profile/actions";
+import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = { title: "Onboarding" };
 
@@ -16,7 +17,7 @@ export default async function OnboardingPage() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-24 text-center">
       <div className="flex flex-col items-center gap-3 animate-in fade-in-0 slide-in-from-top-2 duration-500">
-        <Sparkles className="h-6 w-6 animate-in zoom-in-50 spin-in-45 duration-700" />
+        <Logo className="h-10 w-10 animate-in zoom-in-50 duration-700" />
         <h1 className="text-2xl font-semibold tracking-tight">
           ¿Cómo utilizarás NEXA AI?
         </h1>

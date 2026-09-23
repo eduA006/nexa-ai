@@ -91,42 +91,46 @@
 }
 
 /*
- * El tema retro no distingue claro/oscuro (Windows 98 no tenía "modo
- * oscuro") — .dark usa la misma paleta para que el switch de tema
- * existente no rompa la estética en vez de generar un híbrido raro.
+ * Tema "Moderno" — alternativa opcional al retro, activada por
+ * next-themes con la clase `.modern` en <html> (ver ThemeModeToggle).
+ * Paleta editorial cálida, un único acento (variación desaturada del
+ * azul marino de marca #000080) y radios reales — pensado como "piel"
+ * alternativa sobre los mismos componentes, sin tocar su lógica.
  */
-.dark {
-  --background: #008080;
-  --foreground: #000000;
-  --card: #c0c0c0;
-  --card-foreground: #000000;
-  --popover: #c0c0c0;
-  --popover-foreground: #000000;
-  --primary: #000080;
+.modern {
+  --background: #f7f7f5;
+  --foreground: #1c1c1a;
+  --card: #ffffff;
+  --card-foreground: #1c1c1a;
+  --popover: #ffffff;
+  --popover-foreground: #1c1c1a;
+  --primary: #33415c;
   --primary-foreground: #ffffff;
-  --secondary: #c0c0c0;
-  --secondary-foreground: #000000;
-  --muted: #d4d0c8;
-  --muted-foreground: #444444;
-  --accent: #000080;
-  --accent-foreground: #ffffff;
-  --destructive: #aa0000;
-  --border: #808080;
+  --secondary: #eeede9;
+  --secondary-foreground: #1c1c1a;
+  --muted: #f0efeb;
+  --muted-foreground: #73706a;
+  --accent: #e4e7ef;
+  --accent-foreground: #33415c;
+  --destructive: #a8433d;
+  --border: #e2e0da;
   --input: #ffffff;
-  --ring: #000080;
-  --chart-1: #000080;
-  --chart-2: #808000;
-  --chart-3: #800080;
-  --chart-4: #008080;
-  --chart-5: #aa0000;
-  --sidebar: #c0c0c0;
-  --sidebar-foreground: #000000;
-  --sidebar-primary: #000080;
+  --ring: #33415c;
+  --chart-1: #33415c;
+  --chart-2: #7c6f57;
+  --chart-3: #5c7a6b;
+  --chart-4: #8a5a5a;
+  --chart-5: #5a6b8a;
+  --radius: 0.75rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1c1c1a;
+  --sidebar-primary: #33415c;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #000080;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #808080;
-  --sidebar-ring: #000080;
+  --sidebar-accent: #e4e7ef;
+  --sidebar-accent-foreground: #33415c;
+  --sidebar-border: #e2e0da;
+  --sidebar-ring: #33415c;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
@@ -215,6 +219,72 @@
       inset 2px 2px 0 0 #808080,
       inset -2px -2px 0 0 #dfdfdf;
   }
+
+  /*
+   * Reskin de los mismos componentes .win98-* bajo el tema moderno —
+   * mismo HTML/JSX, solo cambia la piel visual. Sombras suaves con el
+   * tinte del acento en vez de biseles pixelados, transiciones y un
+   * feedback de presión con `scale` en vez del bisel invertido.
+   */
+  .modern .win98-panel {
+    box-shadow:
+      0 1px 2px rgba(51, 65, 92, 0.06),
+      0 10px 30px -14px rgba(51, 65, 92, 0.25);
+  }
+
+  .modern .win98-well {
+    box-shadow: inset 0 0 0 1px var(--border);
+  }
+
+  .modern .win98-btn {
+    box-shadow:
+      0 1px 2px rgba(51, 65, 92, 0.08),
+      0 1px 0 0 rgba(51, 65, 92, 0.04);
+    transition:
+      box-shadow 200ms ease,
+      transform 150ms ease,
+      background-color 200ms ease;
+  }
+  .modern .win98-btn:hover:not(:disabled) {
+    box-shadow:
+      0 4px 12px -4px rgba(51, 65, 92, 0.28),
+      0 1px 0 0 rgba(51, 65, 92, 0.04);
+  }
+  .modern .win98-btn:active:not(:disabled) {
+    box-shadow: inset 0 0 0 1px var(--border);
+    transform: scale(0.98);
+  }
+
+  .modern .win98-btn-flat {
+    transition: background-color 200ms ease;
+  }
+  .modern .win98-btn-flat:hover:not(:disabled),
+  .modern .win98-btn-flat[aria-expanded="true"] {
+    background-color: var(--muted);
+    box-shadow: none;
+  }
+  .modern .win98-btn-flat:active:not(:disabled) {
+    box-shadow: inset 0 0 0 1px var(--border);
+    transform: scale(0.98);
+  }
+
+  .modern .win98-titlebar {
+    background: var(--card);
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modern .win98-titlebar-btn {
+    box-shadow: none;
+    transition: background-color 200ms ease;
+  }
+  .modern .win98-titlebar-btn:hover {
+    background-color: var(--muted);
+  }
+  .modern .win98-titlebar-btn:active {
+    box-shadow: none;
+    transform: scale(0.92);
+  }
 }
 
 /* Scrollbar cuadrada y gris, coherente con el resto del tema. */
@@ -232,4 +302,20 @@
     inset -1px -1px 0 0 #000000,
     inset 2px 2px 0 0 #dfdfdf,
     inset -2px -2px 0 0 #808080;
+}
+
+.modern::-webkit-scrollbar,
+.modern ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.modern::-webkit-scrollbar-track,
+.modern ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modern::-webkit-scrollbar-thumb,
+.modern ::-webkit-scrollbar-thumb {
+  background: var(--border);
+  box-shadow: none;
+  border-radius: 999px;
 }

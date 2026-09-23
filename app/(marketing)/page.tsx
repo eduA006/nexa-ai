@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ThemeModeToggle } from "@/components/theme-mode-toggle";
 
 const studentTools = [
   "Corrector APA 7",
@@ -81,6 +82,7 @@ export default function LandingPage() {
             </a>
           </nav>
           <div className="flex items-center gap-2">
+            <ThemeModeToggle className="h-8 w-8" />
             <Link
               href="/login"
               className={buttonVariants({

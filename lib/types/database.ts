@@ -162,6 +162,45 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_requests: {
+        Row: {
+          amount_pen: number
+          created_at: string
+          id: string
+          period: string
+          proof_storage_path: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount_pen?: number
+          created_at?: string
+          id?: string
+          period?: string
+          proof_storage_path: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount_pen?: number
+          created_at?: string
+          id?: string
+          period?: string
+          proof_storage_path?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -170,6 +209,7 @@ export type Database = {
           full_name: string | null
           id: string
           plan: string
+          pro_expires_at: string | null
           role: string | null
           updated_at: string
           user_id: string
@@ -181,6 +221,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           plan?: string
+          pro_expires_at?: string | null
           role?: string | null
           updated_at?: string
           user_id: string
@@ -192,6 +233,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           plan?: string
+          pro_expires_at?: string | null
           role?: string | null
           updated_at?: string
           user_id?: string

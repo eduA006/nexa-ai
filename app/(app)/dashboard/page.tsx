@@ -36,7 +36,7 @@ export default async function DashboardPage() {
   const profile = session?.profile;
   const displayName = greetingName(profile?.full_name, session?.user.email);
   const recommended = RECOMMENDED_TOOLS[profile?.role ?? "student"];
-  const isPro = hasProAccess(profile?.plan);
+  const isPro = hasProAccess(profile);
   const [recentDocuments, recentSessions, toolCounts] = await Promise.all([
     getUserDocuments().then((docs) => docs.slice(0, 3)),
     getRecentAiSessions(4),

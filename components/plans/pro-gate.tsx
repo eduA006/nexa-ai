@@ -14,7 +14,7 @@ export async function ProGate({
   children: ReactNode;
 }) {
   const session = await getCurrentUser();
-  if (!canAccessTool(slug, session?.profile?.plan)) {
+  if (!canAccessTool(slug, session?.profile)) {
     return <UpgradePrompt toolName={toolName} />;
   }
   return <>{children}</>;

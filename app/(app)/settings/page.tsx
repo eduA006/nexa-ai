@@ -6,8 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { RoleForm } from "@/components/settings/role-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
+import { PaymentForm } from "@/components/plans/payment-form";
 import { ALL_TOOLS } from "@/components/tools/catalog";
 import { hasProAccess, isProTool } from "@/lib/config/plans";
+import { getLatestPaymentRequest } from "@/lib/payments/queries";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = { title: "Configuración" };
@@ -16,9 +18,10 @@ export default async function SettingsPage() {
   const session = await getCurrentUser();
   if (!session) redirect("/login");
 
-  const isPro = hasProAccess(session.profile?.plan);
+  const isPro = hasProAccess(session.profile);
   const freeTools = ALL_TOOLS.filter((tool) => !isProTool(tool.slug));
   const proTools = ALL_TOOLS.filter((tool) => isProTool(tool.slug));
+  const latestPaymentRequest = await getLatestPaymentRequest();
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10">
@@ -44,8 +47,15 @@ export default async function SettingsPage() {
           <CardTitle className="text-base">Plan</CardTitle>
           <CardDescription>
             {isPro
-              ? "Tienes Pro: acceso a todas las herramientas."
-              : "El plan de pago todavía no está activo. Así se dividen las herramientas mientras tanto:"}
+              ? `Tienes Pro activo hasta el ${
+                  session.profile?.pro_expires_at
+                    ? new Date(session.profile.pro_expires_at).toLocaleDateString("es-PE", {
+                        day: "numeric",
+                        month: "long",
+                      })
+                    : "—"
+                }.`
+              : "Así se dividen las herramientas. Paga con Yape para activar Pro."}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,7 +97,7 @@ export default async function SettingsPage() {
                   <Crown className="h-4 w-4" />
                   Pro
                 </div>
-                {isPro ? <Badge>Tu plan</Badge> : <Badge variant="outline">Próximamente</Badge>}
+                {isPro ? <Badge>Tu plan</Badge> : <Badge variant="outline">S/ 5 / semana</Badge>}
               </div>
               <p className="text-xs text-muted-foreground">
                 Todo lo de Free, más las herramientas que generan un entregable real.
@@ -103,12 +113,9 @@ export default async function SettingsPage() {
             </div>
           </div>
 
-          {!isPro && (
-            <p className="mt-4 text-xs text-muted-foreground">
-              El cobro real todavía no está activo — por ahora las herramientas Pro quedan
-              reservadas para cuando lo esté.
-            </p>
-          )}
+          <div className="mt-4 border-t border-border pt-4">
+            <PaymentForm latestRequest={latestPaymentRequest} />
+          </div>
         </CardContent>
       </Card>
 

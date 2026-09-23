@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Herramientas" };
 export default async function ToolsPage() {
   const session = await getCurrentUser();
   const role = session?.profile?.role ?? "student";
-  const isPro = hasProAccess(session?.profile?.plan);
+  const isPro = hasProAccess(session?.profile);
   const tools = role === "professional" ? PROFESSIONAL_TOOLS : STUDENT_TOOLS;
   const categories = groupByCategory(tools);
 

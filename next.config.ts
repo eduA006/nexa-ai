@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
       bodySizeLimit: `${maxFileSizeMb + 2}mb`,
     },
   },
+  images: {
+    // Comprobantes de pago: URLs firmadas y temporales del bucket privado
+    // `payment-proofs`, mostradas solo en /admin/pagos.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/sign/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

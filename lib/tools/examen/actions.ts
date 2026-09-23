@@ -41,8 +41,8 @@ export async function runGenerarExamen(
     return { error: "Sesión expirada. Vuelve a iniciar sesión." };
   }
 
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("user_id", user.id).single();
-  if (!canAccessTool("examen", profile?.plan)) {
+  const { data: profile } = await supabase.from("profiles").select("plan, pro_expires_at").eq("user_id", user.id).single();
+  if (!canAccessTool("examen", profile)) {
     return { error: "Esta herramienta requiere el plan Pro." };
   }
 

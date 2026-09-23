@@ -49,8 +49,8 @@ export async function runGenerarDocumento(
     return { error: "Sesión expirada. Vuelve a iniciar sesión." };
   }
 
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("user_id", user.id).single();
-  if (!canAccessTool("documentos", profile?.plan)) {
+  const { data: profile } = await supabase.from("profiles").select("plan, pro_expires_at").eq("user_id", user.id).single();
+  if (!canAccessTool("documentos", profile)) {
     return { error: "Esta herramienta requiere el plan Pro." };
   }
 

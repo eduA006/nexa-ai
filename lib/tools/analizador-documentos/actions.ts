@@ -36,8 +36,8 @@ export async function runAnalizadorDocumentos(
     return { error: "Sesión expirada. Vuelve a iniciar sesión." };
   }
 
-  const { data: profile } = await supabase.from("profiles").select("plan").eq("user_id", user.id).single();
-  if (!canAccessTool("analizador-documentos", profile?.plan)) {
+  const { data: profile } = await supabase.from("profiles").select("plan, pro_expires_at").eq("user_id", user.id).single();
+  if (!canAccessTool("analizador-documentos", profile)) {
     return { error: "Esta herramienta requiere el plan Pro." };
   }
 

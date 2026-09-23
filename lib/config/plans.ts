@@ -23,10 +23,23 @@ export function isProTool(slug: string): boolean {
   return PRO_TOOL_SLUGS.has(slug);
 }
 
-export function hasProAccess(plan: string | null | undefined): boolean {
-  return plan === "pro";
+/** Precio y vigencia del pago manual por Yape — no hay cobro recurrente automático. */
+export const PRO_PRICE_PEN = 5;
+export const PRO_PERIOD_DAYS = 7;
+
+export type PlanFields = { plan?: string | null; pro_expires_at?: string | null } | null | undefined;
+
+/**
+ * Pro es un pago manual (Yape) sin renovación automática: `plan` por sí
+ * solo no basta, también debe seguir vigente `pro_expires_at`. Sin fecha
+ * de expiración (ej. datos legacy) se trata como vigente.
+ */
+export function hasProAccess(profile: PlanFields): boolean {
+  if (!profile || profile.plan !== "pro") return false;
+  if (!profile.pro_expires_at) return true;
+  return new Date(profile.pro_expires_at).getTime() > Date.now();
 }
 
-export function canAccessTool(slug: string, plan: string | null | undefined): boolean {
-  return !isProTool(slug) || hasProAccess(plan);
+export function canAccessTool(slug: string, profile: PlanFields): boolean {
+  return !isProTool(slug) || hasProAccess(profile);
 }

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { STUDENT_TOOLS, PROFESSIONAL_TOOLS, groupByCategory } from "@/components/tools/catalog";
 import { ToolFolders } from "@/components/tools/tool-folders";
 
@@ -11,6 +13,29 @@ export default async function ToolsPage() {
   const tools = role === "professional" ? PROFESSIONAL_TOOLS : STUDENT_TOOLS;
   const categories = groupByCategory(tools);
 
+  // Los íconos son referencias a componentes (funciones) y no se pueden pasar
+  // como prop de un Server Component a uno cliente — se renderizan aquí y se
+  // pasa el JSX ya resuelto (sí serializable) a <ToolFolders>.
+  const folders = categories.map((cat) => ({
+    category: cat.category,
+    count: cat.tools.length,
+    content: (
+      <div className="grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
+        {cat.tools.map((tool) => (
+          <Link key={tool.slug} href={`/tools/${tool.slug}`}>
+            <Card className="h-full hover:bg-muted/50">
+              <CardHeader>
+                <tool.icon className="h-5 w-5" />
+                <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
+                <CardDescription>{tool.description}</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        ))}
+      </div>
+    ),
+  }));
+
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10">
       <div>
@@ -20,7 +45,7 @@ export default async function ToolsPage() {
         </p>
       </div>
 
-      <ToolFolders categories={categories} />
+      <ToolFolders folders={folders} />
     </div>
   );
 }

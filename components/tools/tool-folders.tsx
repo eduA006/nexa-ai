@@ -1,18 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useState, type ReactNode } from "react";
 import { Folder, FolderOpen } from "lucide-react";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RetroWindow } from "@/components/retro/title-bar";
-import type { ToolCategory } from "@/components/tools/catalog";
+
+export type ToolFolder = {
+  category: string;
+  count: number;
+  content: ReactNode;
+};
 
 function CategoryFolderIcon({
-  category,
+  folder,
   isOpen,
   onToggle,
 }: {
-  category: ToolCategory;
+  folder: ToolFolder;
   isOpen: boolean;
   onToggle: () => void;
 }) {
@@ -25,9 +28,9 @@ function CategoryFolderIcon({
       className="win98-btn-flat flex w-24 flex-col items-center gap-1 p-2 text-center"
     >
       <Icon className="h-10 w-10 fill-amber-300 text-amber-700" strokeWidth={1.5} />
-      <span className="text-xs leading-tight font-medium break-words">{category.category}</span>
+      <span className="text-xs leading-tight font-medium break-words">{folder.category}</span>
       <span className="text-[11px] text-muted-foreground">
-        {category.tools.length} herramienta{category.tools.length === 1 ? "" : "s"}
+        {folder.count} herramienta{folder.count === 1 ? "" : "s"}
       </span>
     </button>
   );
@@ -37,11 +40,14 @@ function CategoryFolderIcon({
  * Vista de "carpetas" al estilo Explorador de Windows: cada categoría
  * es un ícono de carpeta; al hacer clic se abre como una ventana propia
  * con la grilla de herramientas de esa categoría, en vez de mostrar
- * todo aplanado en una sola grilla larga.
+ * todo aplanado en una sola grilla larga. El contenido de cada carpeta
+ * ya viene renderizado desde el Server Component padre (los íconos de
+ * herramienta son referencias a funciones, no serializables como prop
+ * de servidor a cliente).
  */
-export function ToolFolders({ categories }: { categories: ToolCategory[] }) {
+export function ToolFolders({ folders }: { folders: ToolFolder[] }) {
   const [openCategories, setOpenCategories] = useState<Set<string>>(
-    () => new Set(categories.length > 0 ? [categories[0].category] : []),
+    () => new Set(folders.length > 0 ? [folders[0].category] : []),
   );
 
   function toggle(category: string) {
@@ -56,39 +62,27 @@ export function ToolFolders({ categories }: { categories: ToolCategory[] }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="win98-well flex flex-wrap gap-3 bg-input p-4">
-        {categories.map((cat) => (
+        {folders.map((folder) => (
           <CategoryFolderIcon
-            key={cat.category}
-            category={cat}
-            isOpen={openCategories.has(cat.category)}
-            onToggle={() => toggle(cat.category)}
+            key={folder.category}
+            folder={folder}
+            isOpen={openCategories.has(folder.category)}
+            onToggle={() => toggle(folder.category)}
           />
         ))}
       </div>
 
-      {categories
-        .filter((cat) => openCategories.has(cat.category))
-        .map((cat) => (
+      {folders
+        .filter((folder) => openCategories.has(folder.category))
+        .map((folder) => (
           <RetroWindow
-            key={cat.category}
-            title={`${cat.category} — Propiedades`}
+            key={folder.category}
+            title={`${folder.category} — Propiedades`}
             icon={<FolderOpen className="h-3.5 w-3.5" />}
-            onClose={() => toggle(cat.category)}
+            onClose={() => toggle(folder.category)}
             className="animate-in fade-in-0 slide-in-from-top-1 duration-300"
           >
-            <div className="grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
-              {cat.tools.map((tool) => (
-                <Link key={tool.slug} href={`/tools/${tool.slug}`}>
-                  <Card className="h-full hover:bg-muted/50">
-                    <CardHeader>
-                      <tool.icon className="h-5 w-5" />
-                      <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
-                      <CardDescription>{tool.description}</CardDescription>
-                    </CardHeader>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+            {folder.content}
           </RetroWindow>
         ))}
     </div>

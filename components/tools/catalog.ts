@@ -18,6 +18,7 @@ import {
   Users,
   Layers,
   ClipboardCheck,
+  ShieldAlert,
   type LucideIcon,
 } from "lucide-react";
 
@@ -50,6 +51,7 @@ export const PROFESSIONAL_TOOLS: ToolCatalogItem[] = [
   { slug: "documentos", name: "Generador de documentos", description: "Informes, memorandos, cartas y propuestas.", icon: FileText, category: "Documentos e informes" },
   { slug: "informes", name: "Generador de informes", description: "De datos a informe en DOCX/PDF.", icon: ClipboardList, category: "Documentos e informes" },
   { slug: "analizador-documentos", name: "Analizador de documentos", description: "Fechas, montos, personas y obligaciones clave.", icon: FileSearch, category: "Documentos e informes" },
+  { slug: "riesgos-contratos", name: "Analizador de riesgos y contratos", description: "Detecta cláusulas con redacción atípica frente a prácticas comunes.", icon: ShieldAlert, category: "Documentos e informes" },
   { slug: "excel-csv", name: "Analizador de Excel/CSV", description: "Resumen de datos, estadísticas y tendencias.", icon: Sheet, category: "Datos" },
   { slug: "correos", name: "Asistente de correos", description: "Redactar, mejorar, resumir o cambiar el tono.", icon: MailPlus, category: "Comunicación" },
   { slug: "reuniones", name: "Resumen de reuniones", description: "Decisiones, tareas, responsables y fechas.", icon: Users, category: "Comunicación" },

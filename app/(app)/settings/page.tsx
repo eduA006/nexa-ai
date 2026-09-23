@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { RoleForm } from "@/components/settings/role-form";
 import { ThemeToggle } from "@/components/settings/theme-toggle";
 import { PaymentForm } from "@/components/plans/payment-form";
+import { ProCelebration } from "@/components/plans/pro-celebration";
 import { ALL_TOOLS } from "@/components/tools/catalog";
 import { hasProAccess, isProTool } from "@/lib/config/plans";
 import { getLatestPaymentRequest } from "@/lib/payments/queries";
@@ -25,6 +26,11 @@ export default async function SettingsPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-6 px-6 py-8 md:px-10">
+      <ProCelebration
+        userId={session.user.id}
+        latestRequest={latestPaymentRequest ? { id: latestPaymentRequest.id, status: latestPaymentRequest.status } : null}
+      />
+
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Configuración</h1>
         <p className="text-muted-foreground">Preferencias de tu cuenta.</p>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import Image from "next/image";
 import { Loader2, Clock, XCircle } from "lucide-react";
 import { runSubmitPaymentProof, type SubmitPaymentState } from "@/lib/payments/actions";
 import { Button } from "@/components/ui/button";
+import { QrLightbox } from "@/components/plans/qr-lightbox";
 import { PRO_PRICE_PEN } from "@/lib/config/plans";
 import type { PaymentRequest } from "@/lib/payments/queries";
 
@@ -67,10 +67,8 @@ export function PaymentForm({ latestRequest }: { latestRequest: PaymentRequest |
         </div>
       )}
 
-      <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-start">
-        <div className="win98-panel shrink-0 overflow-hidden bg-card p-1">
-          <Image src="/yape-qr.jpg" alt="Código QR de Yape" width={160} height={220} className="h-auto w-40" />
-        </div>
+      <div className="flex flex-col items-center gap-3 animate-in fade-in-0 zoom-in-95 duration-500 sm:flex-row sm:items-start">
+        <QrLightbox />
         <div className="flex flex-col gap-1.5 text-sm text-muted-foreground">
           <p>
             <span className="font-medium text-foreground">1.</span> Abre tu app Yape y escanea

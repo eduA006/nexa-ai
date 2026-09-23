@@ -7,24 +7,50 @@ import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import type { Document } from "@/lib/documents/queries";
 
-function CardFace({
-  label,
-  text,
-  hint,
-  className,
+/** Ficha de estudio física: cartulina color hueso, margen rojo, perforación punteada. */
+function IndexCard({
+  question,
+  answer,
+  revealed,
+  onToggleReveal,
 }: {
-  label: string;
-  text: string;
-  hint: string;
-  className?: string;
+  question: string;
+  answer: string;
+  revealed: boolean;
+  onToggleReveal: () => void;
 }) {
   return (
-    <div
-      className={`flip-card-face win98-panel flex min-h-[240px] flex-col items-center justify-center gap-3 bg-card p-8 text-center ${className ?? ""}`}
-    >
-      <span className="text-xs font-bold tracking-wide text-primary uppercase">{label}</span>
-      <p className="text-lg leading-snug">{text}</p>
-      <span className="text-xs text-muted-foreground">{hint}</span>
+    <div className="win98-panel relative min-h-[260px] bg-[#fdf8e8] pl-12 text-[#2b2b2b]">
+      {/* Línea roja de margen, como una ficha de estudio de papel real. */}
+      <div className="absolute top-0 bottom-0 left-8 w-px bg-red-400/60" />
+
+      <div className="flex flex-col gap-4 p-6 pl-4">
+        <div>
+          <span className="text-[11px] font-bold tracking-wide text-red-500/80 uppercase">
+            Pregunta
+          </span>
+          <p className="mt-1 text-lg leading-snug">{question}</p>
+        </div>
+
+        {revealed ? (
+          <div className="animate-in fade-in-0 slide-in-from-top-1 duration-300">
+            <div className="border-t border-dashed border-[#2b2b2b]/25 pt-4">
+              <span className="text-[11px] font-bold tracking-wide text-red-500/80 uppercase">
+                Respuesta
+              </span>
+              <p className="mt-1 text-base leading-snug">{answer}</p>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={onToggleReveal}
+            className="win98-btn w-fit bg-secondary px-4 py-1.5 text-sm font-medium text-secondary-foreground"
+          >
+            Ver respuesta
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -34,7 +60,6 @@ function FlashcardViewer({ topic, cards }: { topic: string; cards: { question: s
   const [revealed, setRevealed] = useState(false);
   const card = cards[index];
   const progressPct = ((index + 1) / cards.length) * 100;
-  const stackDepth = Math.min(2, cards.length - 1 - index);
 
   function goTo(nextIndex: number) {
     setIndex(nextIndex);
@@ -57,27 +82,12 @@ function FlashcardViewer({ topic, cards }: { topic: string; cards: { question: s
         />
       </div>
 
-      {/* Pila: tarjetas "fantasma" detrás de la actual, sugieren cuántas faltan. */}
-      <div className="relative">
-        {stackDepth >= 2 && (
-          <div className="win98-panel absolute inset-0 translate-x-3 translate-y-3 rotate-2 bg-muted" />
-        )}
-        {stackDepth >= 1 && (
-          <div className="win98-panel absolute inset-0 translate-x-1.5 translate-y-1.5 rotate-1 bg-muted" />
-        )}
-
-        <div className="flip-card-container relative">
-          <button
-            type="button"
-            onClick={() => setRevealed((v) => !v)}
-            aria-label={revealed ? "Ver la pregunta" : "Revelar la respuesta"}
-            className={`flip-card-inner relative block w-full ${revealed ? "is-flipped" : ""}`}
-          >
-            <CardFace label="Pregunta" text={card.question} hint="Clic para revelar la respuesta" />
-            <CardFace label="Respuesta" text={card.answer} hint="Clic para volver a la pregunta" className="flip-card-back" />
-          </button>
-        </div>
-      </div>
+      <IndexCard
+        question={card.question}
+        answer={card.answer}
+        revealed={revealed}
+        onToggleReveal={() => setRevealed(true)}
+      />
 
       <div className="flex items-center justify-between gap-2">
         <Button

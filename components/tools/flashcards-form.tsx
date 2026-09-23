@@ -7,10 +7,34 @@ import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import type { Document } from "@/lib/documents/queries";
 
+function CardFace({
+  label,
+  text,
+  hint,
+  className,
+}: {
+  label: string;
+  text: string;
+  hint: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flip-card-face win98-panel flex min-h-[240px] flex-col items-center justify-center gap-3 bg-card p-8 text-center ${className ?? ""}`}
+    >
+      <span className="text-xs font-bold tracking-wide text-primary uppercase">{label}</span>
+      <p className="text-lg leading-snug">{text}</p>
+      <span className="text-xs text-muted-foreground">{hint}</span>
+    </div>
+  );
+}
+
 function FlashcardViewer({ topic, cards }: { topic: string; cards: { question: string; answer: string }[] }) {
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const card = cards[index];
+  const progressPct = ((index + 1) / cards.length) * 100;
+  const stackDepth = Math.min(2, cards.length - 1 - index);
 
   function goTo(nextIndex: number) {
     setIndex(nextIndex);
@@ -26,17 +50,34 @@ function FlashcardViewer({ topic, cards }: { topic: string; cards: { question: s
         </span>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setRevealed((v) => !v)}
-        className="win98-panel flex min-h-[220px] flex-col items-center justify-center gap-3 bg-card p-8 text-center"
-      >
-        <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-          {revealed ? "Respuesta" : "Pregunta"}
-        </span>
-        <p className="text-lg">{revealed ? card.answer : card.question}</p>
-        <span className="text-xs text-muted-foreground">(clic para {revealed ? "ver la pregunta" : "revelar la respuesta"})</span>
-      </button>
+      <div className="win98-well h-2.5 w-full overflow-hidden bg-input">
+        <div
+          className="h-full bg-primary transition-all duration-300"
+          style={{ width: `${progressPct}%` }}
+        />
+      </div>
+
+      {/* Pila: tarjetas "fantasma" detrás de la actual, sugieren cuántas faltan. */}
+      <div className="relative">
+        {stackDepth >= 2 && (
+          <div className="win98-panel absolute inset-0 translate-x-3 translate-y-3 rotate-2 bg-muted" />
+        )}
+        {stackDepth >= 1 && (
+          <div className="win98-panel absolute inset-0 translate-x-1.5 translate-y-1.5 rotate-1 bg-muted" />
+        )}
+
+        <div className="flip-card-container relative">
+          <button
+            type="button"
+            onClick={() => setRevealed((v) => !v)}
+            aria-label={revealed ? "Ver la pregunta" : "Revelar la respuesta"}
+            className={`flip-card-inner relative block w-full ${revealed ? "is-flipped" : ""}`}
+          >
+            <CardFace label="Pregunta" text={card.question} hint="Clic para revelar la respuesta" />
+            <CardFace label="Respuesta" text={card.answer} hint="Clic para volver a la pregunta" className="flip-card-back" />
+          </button>
+        </div>
+      </div>
 
       <div className="flex items-center justify-between gap-2">
         <Button

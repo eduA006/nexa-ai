@@ -1,14 +1,29 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-/** Botoncito cuadrado decorativo de la barra de título (_, □, x). */
-function TitleBarButton({ children, label }: { children: ReactNode; label: string }) {
+/** Botoncito cuadrado de la barra de título (_, □, x). Funcional solo si recibe onClick. */
+function TitleBarButton({
+  children,
+  label,
+  onClick,
+}: {
+  children: ReactNode;
+  label: string;
+  onClick?: () => void;
+}) {
+  const className =
+    "win98-titlebar-btn flex h-[18px] w-[18px] items-center justify-center bg-secondary text-[11px] leading-none font-bold text-secondary-foreground";
+
+  if (onClick) {
+    return (
+      <button type="button" aria-label={label} onClick={onClick} className={className}>
+        {children}
+      </button>
+    );
+  }
+
   return (
-    <span
-      role="presentation"
-      aria-label={label}
-      className="win98-titlebar-btn flex h-[18px] w-[18px] items-center justify-center bg-secondary text-[11px] leading-none font-bold text-secondary-foreground"
-    >
+    <span role="presentation" aria-label={label} className={className}>
       {children}
     </span>
   );
@@ -16,17 +31,20 @@ function TitleBarButton({ children, label }: { children: ReactNode; label: strin
 
 /**
  * Barra de título clásica de Windows 98: ícono + texto a la izquierda,
- * botones decorativos de minimizar/maximizar/cerrar a la derecha (no
- * funcionales — es chrome visual, no una ventana de verdad).
+ * botones de minimizar/maximizar/cerrar a la derecha. Minimizar/maximizar
+ * son siempre decorativos (chrome visual); cerrar es funcional si se pasa
+ * `onClose`.
  */
 export function TitleBar({
   title,
   icon,
   className,
+  onClose,
 }: {
   title: string;
   icon?: ReactNode;
   className?: string;
+  onClose?: () => void;
 }) {
   return (
     <div className={cn("win98-titlebar flex items-center justify-between gap-2 py-0.5 pr-0.5 pl-1.5", className)}>
@@ -37,7 +55,7 @@ export function TitleBar({
       <div className="flex shrink-0 items-center gap-0.5">
         <TitleBarButton label="Minimizar">_</TitleBarButton>
         <TitleBarButton label="Maximizar">□</TitleBarButton>
-        <TitleBarButton label="Cerrar">×</TitleBarButton>
+        <TitleBarButton label="Cerrar" onClick={onClose}>×</TitleBarButton>
       </div>
     </div>
   );
@@ -50,16 +68,18 @@ export function RetroWindow({
   children,
   className,
   titleBarClassName,
+  onClose,
 }: {
   title: string;
   icon?: ReactNode;
   children: ReactNode;
   className?: string;
   titleBarClassName?: string;
+  onClose?: () => void;
 }) {
   return (
     <div className={cn("win98-panel flex flex-col bg-card text-sm text-card-foreground", className)}>
-      <TitleBar title={title} icon={icon} className={titleBarClassName} />
+      <TitleBar title={title} icon={icon} className={titleBarClassName} onClose={onClose} />
       {children}
     </div>
   );

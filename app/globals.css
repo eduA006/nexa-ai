@@ -217,6 +217,28 @@
   }
 }
 
+/* Tarjeta de flashcards con animación de volteo 3D (pregunta/respuesta). */
+.flip-card-container {
+  perspective: 1400px;
+}
+.flip-card-inner {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.flip-card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+.flip-card-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+
 /* Scrollbar cuadrada y gris, coherente con el resto del tema. */
 ::-webkit-scrollbar {
   width: 16px;

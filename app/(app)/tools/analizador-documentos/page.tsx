@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { AnalizadorDocumentosForm } from "@/components/tools/analizador-documentos-form";
+import { ProGate } from "@/components/plans/pro-gate";
 
 export const metadata: Metadata = { title: "Analizador de documentos" };
 
@@ -17,7 +18,9 @@ export default async function AnalizadorDocumentosToolPage() {
         </p>
       </div>
 
-      <AnalizadorDocumentosForm documents={docxDocuments} />
+      <ProGate slug="analizador-documentos" toolName="Analizador de documentos">
+        <AnalizadorDocumentosForm documents={docxDocuments} />
+      </ProGate>
     </div>
   );
 }

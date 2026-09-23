@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
+import { canAccessTool } from "@/lib/config/plans";
 import { analyzeDocumentFacts } from "@/lib/documents/analyze/analizador-documentos";
 
 export type AnalizadorDocumentosResult = {
@@ -33,6 +34,11 @@ export async function runAnalizadorDocumentos(
   } = await supabase.auth.getUser();
   if (!user) {
     return { error: "Sesión expirada. Vuelve a iniciar sesión." };
+  }
+
+  const { data: profile } = await supabase.from("profiles").select("plan").eq("user_id", user.id).single();
+  if (!canAccessTool("analizador-documentos", profile?.plan)) {
+    return { error: "Esta herramienta requiere el plan Pro." };
   }
 
   const { count } = await supabase

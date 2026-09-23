@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { ExamenForm } from "@/components/tools/examen-form";
+import { ProGate } from "@/components/plans/pro-gate";
 
 export const metadata: Metadata = { title: "Simulador de exámenes" };
 
@@ -18,7 +19,9 @@ export default async function ExamenToolPage() {
         </p>
       </div>
 
-      <ExamenForm documents={docxDocuments} />
+      <ProGate slug="examen" toolName="Simulador de exámenes">
+        <ExamenForm documents={docxDocuments} />
+      </ProGate>
     </div>
   );
 }

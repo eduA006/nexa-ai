@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
+import { canAccessTool } from "@/lib/config/plans";
 import { analyzePresentationDocument } from "@/lib/documents/analyze/presentaciones";
 import type { PresentationResult } from "@/lib/ai/prompts/presentaciones";
 
@@ -28,6 +29,11 @@ export async function runPresentationGeneration(
   } = await supabase.auth.getUser();
   if (!user) {
     return { error: "Sesión expirada. Vuelve a iniciar sesión." };
+  }
+
+  const { data: profile } = await supabase.from("profiles").select("plan").eq("user_id", user.id).single();
+  if (!canAccessTool("presentaciones", profile?.plan)) {
+    return { error: "Esta herramienta requiere el plan Pro." };
   }
 
   const { count } = await supabase

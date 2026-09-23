@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { InformesForm } from "@/components/tools/informes-form";
+import { ProGate } from "@/components/plans/pro-gate";
 
 export const metadata: Metadata = { title: "Generador de informes" };
 
@@ -19,7 +20,9 @@ export default async function InformesToolPage() {
         </p>
       </div>
 
-      <InformesForm documents={spreadsheetDocuments} />
+      <ProGate slug="informes" toolName="Generador de informes">
+        <InformesForm documents={spreadsheetDocuments} />
+      </ProGate>
     </div>
   );
 }

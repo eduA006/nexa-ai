@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getUserDocuments } from "@/lib/documents/queries";
 import { PresentacionesForm } from "@/components/tools/presentaciones-form";
+import { ProGate } from "@/components/plans/pro-gate";
 
 export const metadata: Metadata = { title: "Generador de presentaciones" };
 
@@ -18,7 +19,9 @@ export default async function PresentacionesToolPage() {
         </p>
       </div>
 
-      <PresentacionesForm documents={docxDocuments} />
+      <ProGate slug="presentaciones" toolName="Generador de presentaciones">
+        <PresentacionesForm documents={docxDocuments} />
+      </ProGate>
     </div>
   );
 }

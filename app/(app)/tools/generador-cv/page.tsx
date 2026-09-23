@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GeneradorCvForm } from "@/components/tools/generador-cv-form";
+import { ProGate } from "@/components/plans/pro-gate";
 
 export const metadata: Metadata = { title: "Generador de CV" };
 
@@ -13,7 +14,9 @@ export default function GeneradorCvToolPage() {
         </p>
       </div>
 
-      <GeneradorCvForm />
+      <ProGate slug="generador-cv" toolName="Generador de CV">
+        <GeneradorCvForm />
+      </ProGate>
     </div>
   );
 }

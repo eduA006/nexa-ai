@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RECOMMENDED_TOOLS, getToolBySlug } from "@/components/tools/catalog";
+import { isProTool, hasProAccess } from "@/lib/config/plans";
 
 export const metadata: Metadata = { title: "Panel" };
 
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
   const profile = session?.profile;
   const displayName = greetingName(profile?.full_name, session?.user.email);
   const recommended = RECOMMENDED_TOOLS[profile?.role ?? "student"];
+  const isPro = hasProAccess(profile?.plan);
   const [recentDocuments, recentSessions, toolCounts] = await Promise.all([
     getUserDocuments().then((docs) => docs.slice(0, 3)),
     getRecentAiSessions(4),
@@ -71,7 +73,10 @@ export default async function DashboardPage() {
             >
               <Card className="h-full hover:bg-muted/50">
                 <CardHeader>
-                  <tool.icon className="h-5 w-5" />
+                  <div className="flex items-start justify-between gap-2">
+                    <tool.icon className="h-5 w-5" />
+                    {isProTool(tool.slug) && !isPro && <Badge variant="secondary">Pro</Badge>}
+                  </div>
                   <CardTitle className="mt-2 text-base">{tool.name}</CardTitle>
                   <CardDescription>{tool.description}</CardDescription>
                 </CardHeader>

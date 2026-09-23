@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { LIMITS, startOfTodayIso } from "@/lib/config/limits";
+import { canAccessTool } from "@/lib/config/plans";
 import { analyzeSpreadsheet } from "@/lib/documents/analyze/excel";
 import { buildInformeDocx } from "@/lib/documents/generate/informe-docx";
 
@@ -43,6 +44,11 @@ export async function runGenerarInforme(
   } = await supabase.auth.getUser();
   if (!user) {
     return { error: "Sesión expirada. Vuelve a iniciar sesión." };
+  }
+
+  const { data: profile } = await supabase.from("profiles").select("plan").eq("user_id", user.id).single();
+  if (!canAccessTool("informes", profile?.plan)) {
+    return { error: "Esta herramienta requiere el plan Pro." };
   }
 
   const [{ count: aiCount }, { count: docCount }] = await Promise.all([

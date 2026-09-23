@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DocumentosForm } from "@/components/tools/documentos-form";
+import { ProGate } from "@/components/plans/pro-gate";
 
 export const metadata: Metadata = { title: "Generador de documentos" };
 
@@ -13,7 +14,9 @@ export default function DocumentosToolPage() {
         </p>
       </div>
 
-      <DocumentosForm />
+      <ProGate slug="documentos" toolName="Generador de documentos">
+        <DocumentosForm />
+      </ProGate>
     </div>
   );
 }
